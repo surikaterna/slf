@@ -1,20 +1,29 @@
 import { Logger } from './logger';
 let _factory;
+const _chain = [];
+const NOOP = function () {};
+
 export class LoggerFactory {
   static getLogger(name) {
-    let logger;
-    if (!_factory) {
-      console.log('Warning SLF: No LoggerFactory installed');
-      logger = new Logger();
+    let sink = NOOP;
+    if (_factory) {
+      sink = _factory(name);
     } else {
-      logger = _factory(name);
+      console.log('Warning SLF: No LoggerFactory installed');
     }
-    return logger;
+    return new Logger(name, sink, _chain);
   }
   static setFactory(factory) {
     if (_factory) {
       console.log('Warning SLF: Replacing installed LoggerFactory', _factory, factory);
     }
     _factory = factory;
+  }
+  /**
+   * middleware has function(event, next)
+   * next should be called next(err, event);
+   */
+  static use(middleware) {
+    _chain.push(middleware);
   }
 }
