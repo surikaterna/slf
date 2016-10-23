@@ -1,5 +1,5 @@
 # slf
-Surikat/Simple Log Facade
+Surikat Log Facade
 
 ## Install
 ```bash
