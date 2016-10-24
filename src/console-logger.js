@@ -1,8 +1,6 @@
 /**
- * Implementation of a logging provider using the console.log
+ * Implementation of a tiny logging provider using the console.log
  */
-
-
 const _log = function (event) {
   // pretty print
   console.log(event);

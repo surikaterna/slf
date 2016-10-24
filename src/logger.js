@@ -1,14 +1,5 @@
 import { LoggerFactory } from './logger-factory';
 
-const LOGGING_LEVELS = {
-  TRACE: 1,
-  DEBUG: 2,
-  INFO: 3,
-  WARN: 4,
-  ERROR: 5,
-  CRITICAL: 6
-};
-
 export class Logger {
   constructor(name, sink, chain) {
     this._name = name;
@@ -42,25 +33,25 @@ export class Logger {
       name: this._name,
       level,
       params,
-      time: new Date()
+      timeStamp: new Date()
     };
     return event;
   }
 }
 const LP = Logger.prototype;
 LP.debug = function (...params) {
-  this._log(LOGGING_LEVELS.DEBUG, params);
+  this._log('debug', params);
 };
 LP.info = function (...params) {
-  this._log(LOGGING_LEVELS.INFO, params);
+  this._log('info', params);
 };
 LP.warn = function (...params) {
-  this._log(LOGGING_LEVELS.WARN, params);
+  this._log('warn', params);
 };
 LP.error = function (...params) {
-  this._log(LOGGING_LEVELS.ERROR, params);
+  this._log('error', params);
 };
 LP.critical = function (...params) {
-  this._log(LOGGING_LEVELS.CRITICAL, params);
+  this._log('critital', params);
 };
 
