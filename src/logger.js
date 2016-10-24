@@ -15,7 +15,7 @@ export class Logger {
     // apply middlewares
     const next = (err, evt) => {
       if (err) {
-        this._sink(this._buildLogEvent(LOGGING_LEVELS.ERROR, [err]));
+        this._sink(this._buildLogEvent('error', [err]));
       }
 
       if (this._chain && this._chain[i]) {
@@ -38,6 +38,7 @@ export class Logger {
     return event;
   }
 }
+
 const LP = Logger.prototype;
 LP.debug = function (...params) {
   this._log('debug', params);
@@ -55,3 +56,11 @@ LP.critical = function (...params) {
   this._log('critital', params);
 };
 
+LP.log = function (...params) {
+  const level = params[0];
+  if (['debug', 'info', 'warn', 'error', 'critical'].indexOf(level) !== -1) {
+    this[level].apply(this, params.slice(1));
+  } else {
+    this.info.apply(this, params);
+  }
+};

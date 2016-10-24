@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha test --recursive --compilers js:babel-core/register"
+    "test": "mocha test --recursive --compilers js:babel-core/register",
+    "test.watch": "mocha test --watch --recursive --compilers js:babel-core/register"
   },
   "repository": {
     "type": "git",

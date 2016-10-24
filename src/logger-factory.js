@@ -17,6 +17,9 @@ export class LoggerFactory {
     if (_factory) {
       console.log('Warning SLF: Replacing installed LoggerFactory', _factory, factory);
     }
+    if(!factory) {
+      console.log('Warning SLF: Removing LoggerFactory; passed undefined to setFactory');
+    }
     _factory = factory;
   }
   /**
