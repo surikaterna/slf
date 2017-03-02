@@ -1,28 +1,24 @@
-import { Logger } from '..';
+import { Logger, LoggerFactory } from '..';
 
 describe('Logger', () => {
   let _log = undefined;
   before(() => {
-    console.log('log log');
     _log = Logger.getLogger(__filename);
+  });
+  afterEach(() => {
+    LoggerFactory.setFactory(null);
   });
 
   describe('#log', () => {
-    it('should warn if no logger is installed', (done) => {
-      const clog = console.log;
-      console.log = function (data) {
-        if (data === 'Warning SLF: No LoggerFactory installed') {
-          console.log = clog;
-          done();
-        } else {
-          clog.apply(undefined, arguments);
-        }
-      };
+    it('should exist', () => {
+      _log.log('debug', 'should exist');
+    });
+    it('should queue if no factory is installed', (done) => {
       Logger.getLogger(__filename);
       _log.debug('aloha');
-    });
-    it('should exist', () => {
-      _log.log('debug', 'aloha');
+      LoggerFactory.setFactory(() => {
+        done();
+      });
     });
   });
   describe('#debug', () => {
@@ -50,4 +46,5 @@ describe('Logger', () => {
       _log.critical('debug');
     });
   });
+
 });

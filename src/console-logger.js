@@ -1,11 +1,5 @@
 /**
  * Implementation of a tiny logging provider using the console.log
  */
-const _log = function (event) {
-  // pretty print
-  console.log(event);
-};
-
-const factory = (/* name */) => _log;
-
+const factory = (event) => console.log(event.name, JSON.stringify(event, null, 2));
 export { factory as ConsoleLogger };
