@@ -1,6 +1,6 @@
 {
   "name": "slf",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple Logging Facade",
   "main": "lib/index.js",
   "directories": {
