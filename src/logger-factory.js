@@ -39,7 +39,6 @@ export class LoggerFactory {
       __slf._queued.length = 0;
     }
     __slf._factory = factory;
-    console.log('We got a factory', __slf._queued.length);
     if (__slf._factory && __slf._queued.length > 0) {
       console.log('***** dumping Q');
       __slf._queued.forEach(evt => {
