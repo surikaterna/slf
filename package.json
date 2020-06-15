@@ -1,15 +1,16 @@
 {
   "name": "slf",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple Logging Facade",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "test": "mocha test --recursive --compilers js:babel-core/register",
     "test.watch": "mocha test --watch --recursive --compilers js:babel-core/register",
-    "compile": "babel -d lib src",
+    "compile": "babel src -d lib --copy-files",
     "prepublish": "npm run compile"
   },
   "repository": {
