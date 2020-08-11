@@ -1,17 +1,6 @@
-interface LogFunc {
-  (...value: unknown): void;
-}
-
-interface LogLevelFunc {
-  /** Log at provided level. */
-  (level: Exclude<keyof Logger, 'log'>, ...value: unknown): void;
-  /** Log at info level */
-  (...value: unknown): void;
-}
-
-interface Logger {
+interface Log {
   /** Log at info level. */
-  (...value: unknown): void;
+  (...value: unknown[]): void;
   /** Log very severe error events that will presumably lead the application to abort- */
   critical: LogFunc;
   /** Log fine grained informational events that are most useful to debug an application. */
@@ -25,18 +14,29 @@ interface Logger {
   warn: LogFunc;
 }
 
+interface LogFunc {
+  (...value: unknown[]): void;
+}
+
+interface LogLevelFunc {
+  /** Log at provided level. */
+  (level: Exclude<keyof Log, 'log'>, ...value: unknown[]): void;
+  /** Log at info level */
+  (...value: unknown[]): void;
+}
+
 declare module 'slf' {
   interface Event {
     timeStamp: number;
-    params: string[];
+    params: unknown[];
     name: string;
     level: string;
   }
 
   interface Factory {
-    (loggerName: string): (event: Event) => void;
+    (...events: Event[]): void;
   }
-  
+
   interface Middleware {
     (event: Event, next: NextFunc): void;
   }
@@ -45,8 +45,15 @@ declare module 'slf' {
     (error: Error | null, event: Event): void;
   }
 
+  function ConsoleLogger(event: Event): void;
+
+  class Logger {
+    constructor(name: string, sink: Factory, chain: Middleware[]);
+    static getLogger(name: string): Log;
+  }
+
   class LoggerFactory {
-    static getLogger(name: string): Logger;
+    static getLogger(name: string): Log;
     static setFactory(factory: Factory): void;
     static use(middleware: Middleware): void;
   }
