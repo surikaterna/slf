@@ -39,9 +39,10 @@ export class LoggerFactory {
         }
       };
     }
-    return new Logger(name, sink, __slf._chain, __slf._logLevel);
+    const envLogLevel = LEVEL[process.env.SLF_LOGLEVEL];
+    return new Logger(name, sink, __slf._chain, __slf._logLevel || envLogLevel || LEVEL.debug);
   }
-  static setFactory(factory, level = LEVEL.debug) {
+  static setFactory(factory, level = null) {
     if (__slf._factory && factory) {
       console.log('Warning SLF: Replacing installed LoggerFactory', __slf._factory, factory);
     }
@@ -58,7 +59,8 @@ export class LoggerFactory {
     }
 
     if (!__slf._logLevel) {
-      __slf._logLevel = level;
+      const envLogLevel = LEVEL[process.env.SLF_LOGLEVEL];
+      __slf._logLevel = level || envLogLevel || LEVEL.debug;
     }
   }
   /**
