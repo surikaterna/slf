@@ -1,8 +1,18 @@
 import { Logger } from './logger';
+
+export const LEVEL = global.LEVEL || ( global['LEVEL'] = {
+  debug: 1,
+  info: 2,
+  warn: 3,
+  error: 4,
+  critical: 5
+});
+
 const __slf = global.__slf || ( global['__slf'] = {
     _chain: [],
     _queued: [],
     _factory: null,
+    _logLevel: null,
     hasWarned: false
   });
 
@@ -29,9 +39,9 @@ export class LoggerFactory {
         }
       };
     }
-    return new Logger(name, sink, __slf._chain);
+    return new Logger(name, sink, __slf._chain, __slf._logLevel);
   }
-  static setFactory(factory) {
+  static setFactory(factory, level = LEVEL.debug) {
     if (__slf._factory && factory) {
       console.log('Warning SLF: Replacing installed LoggerFactory', __slf._factory, factory);
     }
@@ -45,6 +55,10 @@ export class LoggerFactory {
         __slf._factory(evt);
       });
       __slf._queued.length = 0;
+    }
+
+    if (!__slf._logLevel) {
+      __slf._logLevel = level;
     }
   }
   /**

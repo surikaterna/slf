@@ -1,15 +1,19 @@
-import { LoggerFactory } from './logger-factory';
+import { LoggerFactory, LEVEL } from './logger-factory';
 
 export class Logger {
-  constructor(name, sink, chain) {
+  constructor(name, sink, chain, logLevel) {
     this._name = name;
     this._sink = sink;
     this._chain = chain;
+    this._logLevel = logLevel;
   }
   static getLogger(name = '/') {
     return LoggerFactory.getLogger(name);
   }
   _log(level, params) {
+    if (LEVEL[level] < this._logLevel) {
+      return;
+    }
     const event = this._buildLogEvent(level, params);
     let i = 0;
     // apply middlewares
