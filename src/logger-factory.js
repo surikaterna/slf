@@ -1,11 +1,11 @@
 import { Logger } from './logger';
 
 export const LEVEL = global.LEVEL || ( global['LEVEL'] = {
-  debug: 1,
-  info: 2,
-  warn: 3,
-  error: 4,
-  critical: 5
+  Debug: 1,
+  Info: 2,
+  Warn: 3,
+  Error: 4,
+  Critical: 5
 });
 
 const __slf = global.__slf || ( global['__slf'] = {
@@ -16,10 +16,6 @@ const __slf = global.__slf || ( global['__slf'] = {
     hasWarned: false
   });
 
-/*let _factory;
-const _chain = [];
-const _queued = [];
-*/
 
 export class LoggerFactory {
   static getLogger(name) {
@@ -39,8 +35,7 @@ export class LoggerFactory {
         }
       };
     }
-    const envLogLevel = LEVEL[process.env.SLF_LOGLEVEL];
-    return new Logger(name, sink, __slf._chain, __slf._logLevel || envLogLevel || LEVEL.debug);
+    return new Logger(name, sink, __slf._chain, __slf._logLevel || LoggerFactory._getEnvLogLevel() || LEVEL.Debug);
   }
   static setFactory(factory, level = null) {
     if (__slf._factory && factory) {
@@ -59,8 +54,7 @@ export class LoggerFactory {
     }
 
     if (!__slf._logLevel) {
-      const envLogLevel = LEVEL[process.env.SLF_LOGLEVEL];
-      __slf._logLevel = level || envLogLevel || LEVEL.debug;
+      __slf._logLevel = level || LoggerFactory._getEnvLogLevel() || LEVEL.Debug;
     }
   }
   /**
@@ -69,5 +63,13 @@ export class LoggerFactory {
    */
   static use(middleware) {
     __slf._chain.push(middleware);
+  }
+
+  static _getEnvLogLevel() {
+    const envLevel = process.env.SLF_LOGLEVEL
+    if (envLevel) {
+      const lvl = envLevel.charAt(0).toUpperCase() + envLevel.slice(1);
+      return LEVEL[lvl];
+    }
   }
 }

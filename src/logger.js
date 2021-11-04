@@ -11,7 +11,7 @@ export class Logger {
     return LoggerFactory.getLogger(name);
   }
   _log(level, params) {
-    if (LEVEL[level] < this._logLevel) {
+    if (LEVEL[this._capitalize(level)] < this._logLevel) {
       return;
     }
     const event = this._buildLogEvent(level, params);
@@ -40,6 +40,10 @@ export class Logger {
       timeStamp: new Date()
     };
     return event;
+  }
+
+  _capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }
 

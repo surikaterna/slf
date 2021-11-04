@@ -29,11 +29,11 @@ interface NextFunc {
 }
 
 export enum Level {
-  debug = 1,
-  info = 2,
-  warn = 3,
-  error = 4,
-  critical = 5
+  Debug = 1,
+  Info = 2,
+  Warn = 3,
+  Error = 4,
+  Critical = 5
 }
 
 export function ConsoleLogger(event: Event): void;
