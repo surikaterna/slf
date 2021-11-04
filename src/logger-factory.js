@@ -1,6 +1,6 @@
 import { Logger } from './logger';
 
-export const LEVEL = global.LEVEL || ( global['LEVEL'] = {
+export const Level = global.Level || ( global['Level'] = {
   Debug: 1,
   Info: 2,
   Warn: 3,
@@ -35,7 +35,7 @@ export class LoggerFactory {
         }
       };
     }
-    return new Logger(name, sink, __slf._chain, __slf._logLevel || LoggerFactory._getEnvLogLevel() || LEVEL.Debug);
+    return new Logger(name, sink, __slf._chain, LoggerFactory._getLogLevel());
   }
   static setFactory(factory, level = null) {
     if (__slf._factory && factory) {
@@ -54,7 +54,7 @@ export class LoggerFactory {
     }
 
     if (!__slf._logLevel) {
-      __slf._logLevel = level || LoggerFactory._getEnvLogLevel() || LEVEL.Debug;
+      __slf._logLevel = LoggerFactory._getLogLevel(level);
     }
   }
   /**
@@ -65,11 +65,11 @@ export class LoggerFactory {
     __slf._chain.push(middleware);
   }
 
-  static _getEnvLogLevel() {
-    const envLevel = process.env.SLF_LOGLEVEL
+  static _getLogLevel(level = undefined) {
+    let envLevel = process.env.SLF_LOG_LEVEL
     if (envLevel) {
-      const lvl = envLevel.charAt(0).toUpperCase() + envLevel.slice(1);
-      return LEVEL[lvl];
+      envLevel = envLevel.charAt(0).toUpperCase() + envLevel.slice(1).toLowerCase();
     }
+    return __slf._logLevel || level || Level[envLevel] || Level.Debug;
   }
 }

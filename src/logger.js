@@ -1,4 +1,4 @@
-import { LoggerFactory, LEVEL } from './logger-factory';
+import { LoggerFactory, Level } from './logger-factory';
 
 export class Logger {
   constructor(name, sink, chain, logLevel) {
@@ -11,7 +11,7 @@ export class Logger {
     return LoggerFactory.getLogger(name);
   }
   _log(level, params) {
-    if (LEVEL[this._capitalize(level)] < this._logLevel) {
+    if (Level[this._capitalize(level)] < this._logLevel) {
       return;
     }
     const event = this._buildLogEvent(level, params);
