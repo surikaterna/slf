@@ -1,15 +1,19 @@
-import { LoggerFactory } from './logger-factory';
+import { LoggerFactory, Level } from './logger-factory';
 
 export class Logger {
-  constructor(name, sink, chain) {
+  constructor(name, sink, chain, logLevel) {
     this._name = name;
     this._sink = sink;
     this._chain = chain;
+    this._logLevel = logLevel;
   }
   static getLogger(name = '/') {
     return LoggerFactory.getLogger(name);
   }
   _log(level, params) {
+    if (Level[this._capitalize(level)] < this._logLevel) {
+      return;
+    }
     const event = this._buildLogEvent(level, params);
     let i = 0;
     // apply middlewares
@@ -36,6 +40,10 @@ export class Logger {
       timeStamp: new Date()
     };
     return event;
+  }
+
+  _capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }
 

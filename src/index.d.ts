@@ -28,6 +28,14 @@ interface NextFunc {
   (error: Error | null, event: Event): void;
 }
 
+export enum Level {
+  Debug = 1,
+  Info = 2,
+  Warn = 3,
+  Error = 4,
+  Critical = 5
+}
+
 export function ConsoleLogger(event: Event): void;
 
 export class Logger {
@@ -49,6 +57,6 @@ export class Logger {
 
 export class LoggerFactory {
   static getLogger(name: string): Logger;
-  static setFactory(factory: Factory): void;
+  static setFactory(factory: Factory, level?: Level): void;
   static use(middleware: Middleware): void;
 }
