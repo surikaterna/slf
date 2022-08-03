@@ -1,3 +1,3 @@
 export { Logger } from './logger';
-export { LoggerFactory, Level } from './logger-factory';
-export { ConsoleLogger } from './console-logger';
+export { LoggerFactory, Level } from './LoggerFactory';
+export { ConsoleLogger } from './ConsoleLogger';
