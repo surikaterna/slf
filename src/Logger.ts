@@ -69,22 +69,22 @@ export class Logger {
 
   /** Log fine grained informational events that are most useful to debug an application. */
   debug: LogFunc = (...params) => {
-    this.log('debug', params);
+    this.log('debug', ...params);
   };
   /** Log informational messages that highlight the progress of the application at a coarse grained level. */
   info: LogFunc = (...params) => {
-    this.log('info', params);
+    this.log('info', ...params);
   };
   /** Log potentially harmful situations. */
   warn: LogFunc = (...params) => {
-    this.log('warn', params);
+    this.log('warn', ...params);
   };
   /** Log error events that might still allow the application to continue running. */
   error: LogFunc = (...params) => {
-    this.log('error', params);
+    this.log('error', ...params);
   };
   /** Log very severe error events that will presumably lead the application to abort- */
   critical: LogFunc = (...params) => {
-    this.log('critital', params);
+    this.log('critital', ...params);
   };
 }
