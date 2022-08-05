@@ -8,22 +8,6 @@ export enum Level {
   Critical = 5
 }
 
-interface Slf {
-  _chain: Middleware[];
-  _queued: Event[];
-  _factory: Factory | null;
-  _logLevel: Level | null;
-  hasWarned: boolean;
-}
-
-const __slf: Slf = {
-  _chain: [],
-  _queued: [],
-  _factory: null,
-  _logLevel: null,
-  hasWarned: false
-};
-
 export interface Event {
   timeStamp: number;
   params: any[];
@@ -42,6 +26,28 @@ export interface NextFunc {
 export interface Middleware {
   (event: Event, next: NextFunc): void;
 }
+
+interface Slf {
+  _chain: Middleware[];
+  _queued: Event[];
+  _factory: Factory | null;
+  _logLevel: Level | null;
+  hasWarned: boolean;
+}
+
+declare global {
+  var __slf: Slf;
+}
+
+const __slf = global.__slf
+  ? global.__slf
+  : (global.__slf = {
+      _chain: [],
+      _queued: [],
+      _factory: null,
+      _logLevel: null,
+      hasWarned: false
+    });
 
 export class LoggerFactory {
   static getLogger(name: string) {
@@ -63,7 +69,7 @@ export class LoggerFactory {
     }
     return new Logger(name, sink, __slf._chain, LoggerFactory.getLogLevel());
   }
-  static setFactory(factory: Factory, level?: string) {
+  static setFactory(factory: Factory | null, level?: Level) {
     if (__slf._factory && factory) {
       console.log('Warning SLF: Replacing installed LoggerFactory', __slf._factory, factory);
     }
@@ -91,11 +97,16 @@ export class LoggerFactory {
     __slf._chain.push(middleware);
   }
 
-  private static getLogLevel(level?: string) {
-    let envLevel = process.env.SLF_LOG_LEVEL as keyof typeof Level | undefined;
-    if (envLevel) {
-      envLevel = (envLevel.charAt(0).toUpperCase() + envLevel.slice(1).toLowerCase()) as keyof typeof Level;
+  private static getLogLevel(level?: Level | undefined): Level {
+    let envString: string | undefined = process.env.SLF_LOG_LEVEL;
+    let envLevel: keyof typeof Level | undefined;
+
+    if (envString) {
+      const capitalized = envString.charAt(0).toUpperCase() + envString.slice(1).toLowerCase();
+      if (capitalized in Level) {
+        envLevel = capitalized as keyof typeof Level;
+      }
     }
-    return __slf._logLevel || (level && Level[level as keyof typeof Level]) || (envLevel && Level[envLevel]) || Level.Debug;
+    return __slf._logLevel || level || (envLevel && Level[envLevel]) || Level.Debug;
   }
 }

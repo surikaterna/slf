@@ -1,7 +1,7 @@
-import { Logger, LoggerFactory } from '../lib';
+import { Logger, LoggerFactory } from './';
 
 describe('Logger', () => {
-  let log = undefined;
+  let log: Logger | undefined = undefined;
   beforeAll(() => {
     log = Logger.getLogger(__filename);
   });
@@ -11,11 +11,11 @@ describe('Logger', () => {
 
   describe('#log', () => {
     it('should exist', () => {
-      log.log('debug', 'should exist');
+      log?.log('debug', 'should exist');
     });
     it('should queue if no factory is installed', (done) => {
       Logger.getLogger(__filename);
-      log.debug('aloha');
+      log?.debug('aloha');
       LoggerFactory.setFactory(() => {
         done();
       });
@@ -23,28 +23,27 @@ describe('Logger', () => {
   });
   describe('#debug', () => {
     it('should exist', () => {
-      log.debug('debug');
+      log?.debug('debug');
     });
   });
   describe('#info', () => {
     it('should exist', () => {
-      log.info('debug');
+      log?.info('debug');
     });
   });
   describe('#warn', () => {
     it('should exist', () => {
-      log.warn('debug');
+      log?.warn('debug');
     });
   });
   describe('#error', () => {
     it('should exist', () => {
-      log.error('debug');
+      log?.error('debug');
     });
   });
   describe('#critical', () => {
     it('should exist', () => {
-      log.critical('debug');
+      log?.critical('debug');
     });
   });
-
 });

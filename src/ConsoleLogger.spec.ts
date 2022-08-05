@@ -1,14 +1,15 @@
-import { Logger, ConsoleLogger, LoggerFactory } from '../lib';
+import { Logger, ConsoleLogger, LoggerFactory } from './';
+import { Event } from './LoggerFactory';
 
 var clog = console.log;
 
 describe('ConsoleLogger', () => {
-  afterEach(() => {
-    LoggerFactory.setFactory(undefined);
+  afterAll(() => {
+    LoggerFactory.setFactory(null);
   });
   describe('#debug', () => {
     it('should log to console', () => {
-      let data;
+      let data: Event[] | undefined;
       console.log = function (...args) {
         data = args;
       };
@@ -16,7 +17,9 @@ describe('ConsoleLogger', () => {
       const log = Logger.getLogger(__filename);
       log.debug('aloha');
       console.log = clog;
-      expect(data.length).toBe(2);
+      if (data) {
+        expect(data.length).toBe(2);
+      }
     });
   });
 });

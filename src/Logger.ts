@@ -1,14 +1,14 @@
-import { LoggerFactory, Level, Event, Factory, NextFunc, Middleware } from './LoggerFactory';
+import { Event, Factory, Level, LoggerFactory, Middleware, NextFunc } from './LoggerFactory';
 
 interface LogFunc {
   (...value: any[]): void;
 }
 
-type LevelKey = Exclude<keyof typeof Logger.prototype, 'log'>;
+type LogFunctionKey = Exclude<keyof typeof Logger.prototype, 'log'>;
 
 interface LogLevelFunc {
   /** Log at provided level. */
-  (level: LevelKey, ...params: any[]): void;
+  (level: LogFunctionKey, ...params: any[]): void;
   /** Log at info level */
   (...params: any[]): void;
 }
@@ -20,9 +20,9 @@ export class Logger {
     return LoggerFactory.getLogger(name);
   }
 
-  log: LogLevelFunc = (level?: LevelKey, ...params) => {
+  log: LogLevelFunc = (level?: LogFunctionKey, ...params) => {
     if (level) {
-      const levelKey = this.capitalize(level) as keyof typeof Level;
+      const levelKey = this.capitalize(level);
       if (Level[levelKey] < this.logLevel) {
         return;
       }
@@ -44,9 +44,9 @@ export class Logger {
       // start middleware chain
       next(null, event);
     } else {
-      const level = params[0] as LevelKey;
+      const level = params[0];
       if (['debug', 'info', 'warn', 'error', 'critical'].indexOf(level) !== -1) {
-        this[level].apply(this, params.slice(1));
+        this[level as LogFunctionKey].apply(this, params.slice(1));
       } else {
         this.info.apply(this, params);
       }
@@ -63,8 +63,8 @@ export class Logger {
     return event;
   }
 
-  private capitalize(str: string) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
+  private capitalize<T extends string>(str: T): Capitalize<T> {
+    return (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
   }
 
   /** Log fine grained informational events that are most useful to debug an application. */
