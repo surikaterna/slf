@@ -32,7 +32,7 @@ export interface Middleware {
 
 interface Slf {
   _chain: Middleware[];
-  _queued: Event[];
+  _queued: Event[][];
   _factory: Factory | null;
   _logLevel: Level | null;
   hasWarned: boolean;
@@ -66,7 +66,7 @@ export class LoggerFactory {
         if (__slf._factory) {
           __slf._factory(...args);
         } else {
-          __slf._queued[__slf._queued.length % 100] = args[0];
+          __slf._queued[__slf._queued.length % 100] = args;
         }
       };
     }
@@ -83,7 +83,7 @@ export class LoggerFactory {
     if (__slf._factory && __slf._queued.length > 0) {
       console.log('***** dumping Q');
       __slf._queued.forEach((evt) => {
-        __slf._factory?.(evt);
+        __slf._factory?.(...evt);
       });
       __slf._queued.length = 0;
     }
