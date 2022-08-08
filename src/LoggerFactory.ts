@@ -1,4 +1,5 @@
 import { Logger } from './logger';
+import { capitalize } from './utils';
 
 export enum Level {
   Debug = 1,
@@ -7,6 +8,8 @@ export enum Level {
   Error = 4,
   Critical = 5
 }
+
+const checkIfLevelKey = (key: any): key is keyof typeof Level => Object.keys(Level).includes(key);
 
 export interface Event {
   timeStamp: number;
@@ -102,9 +105,9 @@ export class LoggerFactory {
     let envLevel: keyof typeof Level | undefined;
 
     if (envString) {
-      const capitalized = envString.charAt(0).toUpperCase() + envString.slice(1).toLowerCase();
-      if (capitalized in Level) {
-        envLevel = capitalized as keyof typeof Level;
+      const capitalized = capitalize(envString);
+      if (checkIfLevelKey(capitalized)) {
+        envLevel = capitalized;
       }
     }
     return __slf._logLevel || level || (envLevel && Level[envLevel]) || Level.Debug;

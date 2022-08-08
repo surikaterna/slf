@@ -1,10 +1,16 @@
 import { Event, Factory, Level, LoggerFactory, Middleware, NextFunc } from './LoggerFactory';
+import { capitalize } from './utils';
 
 interface LogFunc {
   (...value: any[]): void;
 }
 
 type LogFunctionKey = Exclude<keyof typeof Logger.prototype, 'log'>;
+
+const checkIfLogFuncKey = (key: any): key is LogFunctionKey =>
+  Object.keys(Logger.prototype)
+    .filter((key) => key !== 'log')
+    .includes(key);
 
 interface LogLevelFunc {
   /** Log at provided level. */
@@ -22,7 +28,7 @@ export class Logger {
 
   log: LogLevelFunc = (level?: LogFunctionKey, ...params) => {
     if (level) {
-      const levelKey = this.capitalize(level);
+      const levelKey = capitalize(level);
       if (Level[levelKey] < this.logLevel) {
         return;
       }
@@ -45,8 +51,8 @@ export class Logger {
       next(null, event);
     } else {
       const level = params[0];
-      if (['debug', 'info', 'warn', 'error', 'critical'].indexOf(level) !== -1) {
-        this[level as LogFunctionKey].apply(this, params.slice(1));
+      if (checkIfLogFuncKey(level)) {
+        this[level].apply(this, params.slice(1));
       } else {
         this.info.apply(this, params);
       }
@@ -61,10 +67,6 @@ export class Logger {
       timeStamp: new Date().valueOf()
     };
     return event;
-  }
-
-  private capitalize<T extends string>(str: T): Capitalize<T> {
-    return (str.charAt(0).toUpperCase() + str.slice(1)) as Capitalize<T>;
   }
 
   /** Log fine grained informational events that are most useful to debug an application. */

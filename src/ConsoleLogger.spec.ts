@@ -1,7 +1,7 @@
 import { Logger, ConsoleLogger, LoggerFactory } from './';
 import { Event } from './LoggerFactory';
 
-var clog = console.log;
+let clog = console.log;
 
 describe('ConsoleLogger', () => {
   afterAll(() => {
@@ -17,9 +17,7 @@ describe('ConsoleLogger', () => {
       const log = Logger.getLogger(__filename);
       log.debug('aloha');
       console.log = clog;
-      if (data) {
-        expect(data.length).toBe(2);
-      }
+      expect(data?.length).toBe(2);
     });
   });
 });
