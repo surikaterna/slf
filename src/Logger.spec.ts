@@ -1,4 +1,4 @@
-import { Logger, LoggerFactory } from './';
+import { Logger, LoggerFactory } from '.';
 
 describe('Logger', () => {
   let log: Logger;
@@ -18,7 +18,7 @@ describe('Logger', () => {
     });
     it('should queue if no factory is installed', (done) => {
       Logger.getLogger(__filename);
-      log?.debug('aloha');
+      log.debug('aloha');
       LoggerFactory.setFactory(() => {
         done();
       });

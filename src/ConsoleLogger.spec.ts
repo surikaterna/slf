@@ -1,4 +1,4 @@
-import { Logger, ConsoleLogger, LoggerFactory } from './';
+import { Logger, ConsoleLogger, LoggerFactory } from '.';
 import { Event } from './LoggerFactory';
 
 let clog = console.log;
