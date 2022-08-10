@@ -19,7 +19,9 @@ describe('Logger', () => {
     it('should queue if no factory is installed', (done) => {
       Logger.getLogger(__filename);
       log.debug('aloha');
-      LoggerFactory.setFactory(() => {
+      LoggerFactory.setFactory((event) => {
+        expect(event.params[0]).toBe('aloha');
+        expect(event.level).toBe('debug');
         done();
       });
     });
