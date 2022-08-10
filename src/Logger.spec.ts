@@ -1,9 +1,9 @@
-import { Logger, LoggerFactory } from '..';
+import { Logger, LoggerFactory } from '.';
 
 describe('Logger', () => {
-  let _log = undefined;
-  before(() => {
-    _log = Logger.getLogger(__filename);
+  let log: Logger;
+  beforeAll(() => {
+    log = Logger.getLogger(__filename);
   });
   afterEach(() => {
     LoggerFactory.setFactory(null);
@@ -11,40 +11,54 @@ describe('Logger', () => {
 
   describe('#log', () => {
     it('should exist', () => {
-      _log.log('debug', 'should exist');
+      if (!('log' in log)) {
+        fail();
+      }
+      log.log('debug', 'should exist');
     });
     it('should queue if no factory is installed', (done) => {
       Logger.getLogger(__filename);
-      _log.debug('aloha');
-      LoggerFactory.setFactory(() => {
+      log.debug('aloha');
+      LoggerFactory.setFactory((event) => {
+        expect(event.params[0]).toBe('aloha');
+        expect(event.level).toBe('debug');
         done();
       });
     });
   });
   describe('#debug', () => {
     it('should exist', () => {
-      _log.debug('debug');
+      if (!('debug' in log)) {
+        fail();
+      }
     });
   });
   describe('#info', () => {
     it('should exist', () => {
-      _log.info('debug');
+      if (!('info' in log)) {
+        fail();
+      }
     });
   });
   describe('#warn', () => {
     it('should exist', () => {
-      _log.warn('debug');
+      if (!('warn' in log)) {
+        fail();
+      }
     });
   });
   describe('#error', () => {
     it('should exist', () => {
-      _log.error('debug');
+      if (!('error' in log)) {
+        fail();
+      }
     });
   });
   describe('#critical', () => {
     it('should exist', () => {
-      _log.critical('debug');
+      if (!('critical' in log)) {
+        fail();
+      }
     });
   });
-
 });
