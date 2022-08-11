@@ -1,4 +1,4 @@
-import { Logger } from './logger';
+import { Logger } from './Logger';
 import { capitalize } from './utils';
 
 export enum Level {
