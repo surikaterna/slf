@@ -10,6 +10,18 @@ export enum Level {
 }
 
 const checkIfLevelKey = (key: any): key is keyof typeof Level => Object.keys(Level).includes(key);
+const isEventBelowLevel = (event: Event, level: Level = Level.Debug): boolean => {
+  const levelKey = capitalize(event.level);
+  return level > Level[levelKey];
+}
+
+const setEvents = (events: Array<Event>, level: Level = Level.Debug) => {
+  const filteredEvents = events.filter((e) => !isEventBelowLevel(e, level));
+  // events is empty if all are below set level
+  if (filteredEvents.length > 0) {
+    __slf._factory?.(...filteredEvents);
+  }
+}
 
 export interface Event {
   timeStamp: number;
@@ -64,10 +76,7 @@ export class LoggerFactory {
     if (!sink) {
       sink = (...args: Event[]) => {
         if (__slf._factory) {
-          const events = args.filter((e) => !this.isEventBelowLevel(e));
-          if (events.length > 0) {
-            __slf._factory(...events);
-          }
+          setEvents(args, this.getLogLevel());
         } else {
           __slf._queued[__slf._queued.length % 100] = args;
         }
@@ -85,14 +94,7 @@ export class LoggerFactory {
     __slf._factory = factory;
     if (__slf._factory && __slf._queued.length > 0) {
       console.log('***** dumping Q');
-      __slf._queued.forEach((evt) => {
-        const events = evt.filter((e) => !this.isEventBelowLevel(e, level));
-        // Events can be empty if one of the events is below the log level
-        // Then it will be an empty array
-        if (events.length > 0) {
-          __slf._factory?.(...events);
-        }
-      });
+      __slf._queued.forEach((evt) => setEvents(evt, level));
       __slf._queued.length = 0;
     }
 
@@ -121,8 +123,4 @@ export class LoggerFactory {
     return __slf._logLevel || level || (envLevel && Level[envLevel]) || Level.Debug;
   }
 
-  private static isEventBelowLevel(event: Event, level: Level = this.getLogLevel()): boolean {
-    const levelKey = capitalize(event.level);
-    return level > Level[levelKey];
-  }
 }
