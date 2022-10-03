@@ -68,13 +68,6 @@ LoggerFacotry.setFactory(ConsoleLogger);
 ### Log Levels
 
 When setting a factory provider, you can also set a level to ensure not to send logs if the level is too low.
-
-#### Import Level
-
-```javascript
-import { Level } from 'slf';
-```
-
 #### Set Level
 
 ```javascript
