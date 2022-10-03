@@ -46,22 +46,22 @@ Using util.format(...)
 
 ```javascript
 log.info('My Formatted %s', 'Message')
->> 'My Formatted Message';
+>> 'My Formatted Message'
 log.info('My Formatted %d', 123)
->> 'My Formatted 123';
+>> 'My Formatted 123'
 log.info('My Formatted %d', 123)
->> 'My Formatted 123';
+>> 'My Formatted 123'
 ```
 
 Json Formatting
 
 ```javascript
 log.info({ a: 'aloha' })
->> { a: 'aloha' };
+>> { a: 'aloha' }
 log.info('My Formatted %d', 123)
->> 'My Formatted 123';
+>> 'My Formatted 123'
 log.info('My Formatted %d', 123)
->> 'My Formatted 123';
+>> 'My Formatted 123'
 ```
 
 ## Configuring a Provider
