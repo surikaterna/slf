@@ -122,5 +122,4 @@ export class LoggerFactory {
     }
     return __slf._logLevel || level || (envLevel && Level[envLevel]) || Level.Debug;
   }
-
 }
