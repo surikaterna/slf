@@ -59,7 +59,7 @@ export class Logger {
     }
   };
 
-  private buildLogEvent(level: string, params: any[]) {
+  private buildLogEvent(level: Lowercase<keyof typeof Level>, params: any[]) {
     const event: Event = {
       name: this.name,
       level,
