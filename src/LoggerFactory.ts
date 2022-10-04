@@ -10,12 +10,24 @@ export enum Level {
 }
 
 const checkIfLevelKey = (key: any): key is keyof typeof Level => Object.keys(Level).includes(key);
+const checkIfLevelBelow = (event: Event, level: Level = Level.Debug): boolean => {
+  const levelKey = capitalize(event.level);
+  return level > Level[levelKey];
+}
+
+const provideToFactory = (events: Array<Event>, level: Level = Level.Debug) => {
+  const filteredEvents = events.filter((e) => !checkIfLevelBelow(e, level));
+  // events is empty if all are below set level
+  if (filteredEvents.length > 0) {
+    __slf._factory?.(...filteredEvents);
+  }
+}
 
 export interface Event {
   timeStamp: number;
   params: any[];
   name: string;
-  level: string;
+  level: Lowercase<keyof typeof Level>;
 }
 
 export interface Factory {
@@ -45,12 +57,12 @@ declare global {
 const __slf = global.__slf
   ? global.__slf
   : (global.__slf = {
-      _chain: [],
-      _queued: [],
-      _factory: null,
-      _logLevel: null,
-      hasWarned: false
-    });
+    _chain: [],
+    _queued: [],
+    _factory: null,
+    _logLevel: null,
+    hasWarned: false
+  });
 
 export class LoggerFactory {
   static getLogger(name: string) {
@@ -64,7 +76,7 @@ export class LoggerFactory {
     if (!sink) {
       sink = (...args: Event[]) => {
         if (__slf._factory) {
-          __slf._factory(...args);
+          provideToFactory(args, LoggerFactory.getLogLevel());
         } else {
           __slf._queued[__slf._queued.length % 100] = args;
         }
@@ -82,9 +94,7 @@ export class LoggerFactory {
     __slf._factory = factory;
     if (__slf._factory && __slf._queued.length > 0) {
       console.log('***** dumping Q');
-      __slf._queued.forEach((evt) => {
-        __slf._factory?.(...evt);
-      });
+      __slf._queued.forEach((evt) => provideToFactory(evt, level));
       __slf._queued.length = 0;
     }
 

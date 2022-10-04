@@ -1,4 +1,4 @@
-import { Logger, LoggerFactory } from '.';
+import { Event, Level, Logger, LoggerFactory } from '.';
 
 describe('Logger', () => {
   let log: Logger;
@@ -19,11 +19,43 @@ describe('Logger', () => {
     it('should queue if no factory is installed', (done) => {
       Logger.getLogger(__filename);
       log.debug('aloha');
+      log.info('aloha');
+      log.warn('aloha');
+      const events: Array<Event> = [];
       LoggerFactory.setFactory((event) => {
-        expect(event.params[0]).toBe('aloha');
-        expect(event.level).toBe('debug');
-        done();
+        events.push(event);
+        if (events.length === 3) {
+          const [debug, info, warn] = events;
+          expect(debug.level).toBe('debug');
+          expect(debug.params[0]).toBe('aloha');
+          expect(info.level).toBe('info');
+          expect(info.params[0]).toBe('aloha');
+          expect(warn.level).toBe('warn');
+          expect(warn.params[0]).toBe('aloha');
+          done();
+        }
       });
+    });
+    it('should not queue if level is higher level', (done) => {
+      Logger.getLogger(__filename);
+      log.debug('aloha');
+      log.info('aloha');
+      log.warn('aloha');
+      const events: Array<Event> = [];
+      LoggerFactory.setFactory((event) => {
+        if (event.level === 'debug') {
+          return fail();
+        }
+        events.push(event);
+        if (events.length === 2) {
+          const [info, warn] = events;
+          expect(info.level).toBe('info');
+          expect(info.params[0]).toBe('aloha');
+          expect(warn.level).toBe('warn');
+          expect(warn.params[0]).toBe('aloha');
+          done();
+        }
+      }, Level.Info);
     });
   });
   describe('#debug', () => {
