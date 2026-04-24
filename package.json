@@ -1,49 +1,13 @@
 {
-  "name": "slf",
-  "version": "2.0.3",
-  "description": "Simple Logging Facade",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "test": "jest",
-    "test.watch": "jest --watch",
-    "compile": "rimraf lib && concurrently \"npm run compile.src\" \"npm run compile.types\"",
-    "compile.watch": "rimraf lib && concurrently \"npm run compile.src.watch\" \"npm run compile.types.watch\"",
-    "compile.src": "swc src --out-dir lib",
-    "compile.src.watch": "npm run compile.src -- --watch",
-    "compile.types": "tsc",
-    "compile.types.watch": "npm run compile.types -- --watch",
-    "prepare": "npm test && npm run compile",
-    "prepublish": "npm run compile"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/surikaterna/slf.git"
-  },
-  "keywords": [
-    "log",
-    "facade"
+  "name": "slf-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
-  "author": "Surikaterna",
-  "license": "MIT",
-  "devDependencies": {
-    "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.220",
-    "@swc/jest": "^0.2.22",
-    "@types/jest": "^28.1.6",
-    "@types/node": "^18.6.3",
-    "concurrently": "^7.3.0",
-    "eslint": "^2.2.0",
-    "eslint-config-surikat": "^1.1.1",
-    "jest": "^28.1.3",
-    "rimraf": "^3.0.2",
-    "typescript": "^4.7.4"
-  },
-  "bugs": {
-    "url": "https://github.com/surikaterna/slf/issues"
-  },
-  "homepage": "https://github.com/surikaterna/slf#readme"
+  "scripts": {
+    "test": "npm test --workspaces --if-present",
+    "compile": "npm run compile --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present"
+  }
 }
