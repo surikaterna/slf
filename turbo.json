@@ -3,10 +3,13 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**"]
+      "outputs": ["dist/**", "tsconfig.tsbuildinfo"]
     },
     "test": {
       "dependsOn": ["^build"]
+    },
+    "clean": {
+      "cache": false
     },
     "lint": {},
     "format": {}

@@ -7,7 +7,7 @@
   "files": ["dist"],
   "scripts": {
     "build": "tsc -b",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist tsconfig.tsbuildinfo"
   },
   "author": "Surikat",
   "description": "",
