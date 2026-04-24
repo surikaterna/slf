@@ -1,17 +1,11 @@
 {
-    "exclude": ["node_modules"],
-    "compilerOptions": {
-        "module": "esnext",
-        "lib": ["esnext"],
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "strict": true,
-        "baseUrl": ".",
-        "rootDir": "./src",
-        "outDir": "./lib",
-        "declaration": true,
-        "emitDeclarationOnly": true,
-        "types": ["jest"],
-        "skipLibCheck": true
-    }
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "composite": true
+  },
+  "references": [{ "path": "../slf" }],
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

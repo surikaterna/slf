@@ -1,17 +1,10 @@
 {
-  "include": ["src"],
-  "exclude": ["node_modules"],
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "module": "esnext",
-    "lib": ["esnext"],
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strict": true,
-    "rootDir": "./src",
-    "outDir": "./lib",
-    "declaration": true,
-    "emitDeclarationOnly": true,
-    "types": ["jest", "node"],
-    "skipLibCheck": true
-  }
+    "outDir": "dist",
+    "rootDir": "src",
+    "composite": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }

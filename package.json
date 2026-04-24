@@ -2,12 +2,20 @@
   "name": "slf-monorepo",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "packageManager": "npm@11.12.1",
+  "workspaces": ["packages/*"],
   "scripts": {
-    "test": "npm test --workspaces --if-present",
-    "compile": "npm run compile --workspaces --if-present",
-    "clean": "npm run clean --workspaces --if-present"
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "clean": "turbo run clean",
+    "lint": "turbo run lint",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "turbo run build && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0"
   }
 }

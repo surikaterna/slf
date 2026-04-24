@@ -1,20 +1,11 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./lib",
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "module": "esnext",
-    "lib": ["esnext"],
-    "resolveJsonModule": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "strict": true,
-    "declaration": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "emitDeclarationOnly": true,
-    "types": ["jest"],
-    "skipLibCheck": true
+    "outDir": "dist",
+    "rootDir": "src",
+    "composite": true
   },
-  "include": ["src", "types"]
+  "references": [{ "path": "../slf" }],
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
 }
