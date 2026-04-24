@@ -12,11 +12,11 @@ describe('Logger', () => {
   describe('#log', () => {
     it('should exist', () => {
       if (!('log' in log)) {
-        fail();
+        throw new Error('should not reach');
       }
       log.log('debug', 'should exist');
     });
-    it('should queue if no factory is installed', (done) => {
+    it('should queue if no factory is installed', () => new Promise<void>((resolve) => {
       Logger.getLogger(__filename);
       log.debug('aloha');
       log.info('aloha');
@@ -32,11 +32,11 @@ describe('Logger', () => {
           expect(info.params[0]).toBe('aloha');
           expect(warn.level).toBe('warn');
           expect(warn.params[0]).toBe('aloha');
-          done();
+          resolve();
         }
       });
-    });
-    it('should not queue if level is higher level', (done) => {
+    }));
+    it('should not queue if level is higher level', () => new Promise<void>((resolve, reject) => {
       Logger.getLogger(__filename);
       log.debug('aloha');
       log.info('aloha');
@@ -44,7 +44,7 @@ describe('Logger', () => {
       const events: Array<Event> = [];
       LoggerFactory.setFactory((event) => {
         if (event.level === 'debug') {
-          return fail();
+          return reject(new Error('should not reach'));
         }
         events.push(event);
         if (events.length === 2) {
@@ -53,43 +53,43 @@ describe('Logger', () => {
           expect(info.params[0]).toBe('aloha');
           expect(warn.level).toBe('warn');
           expect(warn.params[0]).toBe('aloha');
-          done();
+          resolve();
         }
       }, Level.Info);
-    });
+    }));
   });
   describe('#debug', () => {
     it('should exist', () => {
       if (!('debug' in log)) {
-        fail();
+        throw new Error('should not reach');
       }
     });
   });
   describe('#info', () => {
     it('should exist', () => {
       if (!('info' in log)) {
-        fail();
+        throw new Error('should not reach');
       }
     });
   });
   describe('#warn', () => {
     it('should exist', () => {
       if (!('warn' in log)) {
-        fail();
+        throw new Error('should not reach');
       }
     });
   });
   describe('#error', () => {
     it('should exist', () => {
       if (!('error' in log)) {
-        fail();
+        throw new Error('should not reach');
       }
     });
   });
   describe('#critical', () => {
     it('should exist', () => {
       if (!('critical' in log)) {
-        fail();
+        throw new Error('should not reach');
       }
     });
   });
