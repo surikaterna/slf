@@ -4,16 +4,12 @@
   "description": "Simple Logging Facade",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
     "test": "vitest run",
     "test.watch": "vitest",
     "build": "tsc -b tsconfig.json",
     "dev": "tsc -b tsconfig.json --watch",
-    "prepare": "npm test && npm run build",
-    "prepublishOnly": "npm run build"
+    "prepare": "npm test && npm run build"
   },
   "repository": {
     "type": "git",
