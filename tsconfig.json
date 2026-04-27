@@ -1,0 +1,4 @@
+{
+  "files": [],
+  "references": [{ "path": "./packages/slf" }, { "path": "./packages/slf-debug" }, { "path": "./packages/slf-sentry" }]
+}

@@ -26,13 +26,15 @@ npm install
 ```bash
 npm run test
 npm run build
-npm run build:watch
 npm run dev
 npm run lint
 npm run format
 npm run check-style
 npm run check-style:ci
 ```
+
+- `build`: Run package builds through Turbo (`turbo run build`)
+- `dev`: Run package watch builds through Turbo (`turbo run dev --parallel`)
 
 ## Changesets and versioning
 

@@ -6,5 +6,6 @@
     "rootDir": "./src",
     "outDir": "./lib",
     "types": ["vitest/globals", "node"]
-  }
+  },
+  "references": [{ "path": "../slf" }]
 }

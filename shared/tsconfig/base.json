@@ -4,9 +4,11 @@
     "module": "commonjs",
     "lib": ["esnext"],
     "moduleResolution": "node",
-    "ignoreDeprecations": "6.0",
+    "ignoreDeprecations": "5.0",
     "esModuleInterop": true,
     "strict": true,
+    "composite": true,
+    "incremental": true,
     "declaration": true,
     "skipLibCheck": true
   }

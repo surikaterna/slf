@@ -16,8 +16,7 @@
     "check-style": "biome check --write .",
     "check-style:ci": "biome check .",
     "build": "turbo run build",
-    "build:watch": "turbo run build:watch",
-    "dev": "turbo run build:watch --parallel"
+    "dev": "turbo run dev --parallel"
   },
   "devDependencies": {
     "@biomejs/biome": "latest",
