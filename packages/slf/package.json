@@ -28,8 +28,6 @@
   "devDependencies": {
     "@types/node": "^18.6.3",
     "@repo/tsconfig": "1.0.0",
-    "eslint": "^2.2.0",
-    "eslint-config-surikat": "^1.1.1",
     "rimraf": "^3.0.2",
     "typescript": "^6.0.3",
     "vitest": "latest"

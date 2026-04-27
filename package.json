@@ -8,11 +8,16 @@
   ],
   "scripts": {
     "test": "turbo run test",
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check-style": "biome check --write .",
+    "check-style:ci": "biome check .",
     "build": "turbo run build",
     "build:watch": "turbo run build:watch",
     "dev": "turbo run build:watch --parallel"
   },
   "devDependencies": {
+    "@biomejs/biome": "latest",
     "turbo": "^2.9.6"
   }
 }

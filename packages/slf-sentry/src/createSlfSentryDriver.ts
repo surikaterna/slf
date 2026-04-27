@@ -35,9 +35,7 @@ export default function createSlfSentryDriver(
       });
       isInitialized = true;
     } catch (err) {
-      // eslint-disable-next-line no-console
       console.log('Failed to initialize logging to Sentry with the given url: %s', sentryUrl);
-      // eslint-disable-next-line no-console
       console.error(err);
     }
   }

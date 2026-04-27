@@ -9,8 +9,6 @@
     "test:watch": "vitest",
     "build": "rimraf lib && tsc -p tsconfig.json",
     "build:watch": "rimraf lib && tsc -p tsconfig.json --watch",
-    "lint": "eslint src --ext .js,.ts",
-    "format": "prettier --write src",
     "prepublishOnly": "npm test && npm run build"
   },
   "repository": {
@@ -32,10 +30,6 @@
   "devDependencies": {
     "@types/node": "^18.7.15",
     "@repo/tsconfig": "1.0.0",
-    "eslint": "^8.23.0",
-    "eslint-config-surikat": "^4.0.0",
-    "prettier": "^2.7.1",
-    "prettier-config-surikaterna": "^1.0.1",
     "rimraf": "^3.0.2",
     "slf": "^2.0.3",
     "slf-debug": "^0.3.1",
