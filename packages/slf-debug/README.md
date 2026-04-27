@@ -1,38 +1,44 @@
-SLF Debug Driver
-======
+# slf-debug
 
-[SLF Debug Driver](https://github.com/surikaterna/slf-debug) is a factory for
-using [Debug.js](https://github.com/debug-js/debug) for
-logging [SLF](https://github.com/surikaterna/slf) events.
+SLF driver that sends logs to [`debug`](https://www.npmjs.com/package/debug).
 
-* [Purpose](#purpose)
-* [Installation](#installation)
-* [Usage](#usage)
+## Install
 
-# Purpose
-
-Provide colored logs with timestamps and debug level info to the terminal.
-
-![SLF Debug Output](output.png)
-
-# Installation
-
-Install the _SLF Debug Driver_ as well as _Debug.js_
-
-```shell
-npm install slf-debug debug
+```bash
+npm install slf slf-debug debug
 ```
 
-# Usage
+## Quick start
 
-Provide the SLF Debug Driver as the factory when configuring SLF. Use Debug.js to configure which logs should be
-displayed.
-
-```typescript
+```ts
 import debug from 'debug';
 import { LoggerFactory } from 'slf';
 import slfDebug from 'slf-debug';
 
-debug.enable('viewdb:*');
+debug.enable('api:*');
 LoggerFactory.setFactory(slfDebug);
+
+const log = LoggerFactory.getLogger('api:users');
+log.info('User loaded: %s', '123');
 ```
+
+## Behavior
+
+- Reuses one `debug` logger per SLF logger name.
+- Prepends each message with ISO timestamp and uppercase level.
+- If first param is a string, it is combined with the prefix.
+- If params contain `Error`, stack/message is used for better readability.
+
+Example output shape:
+
+```text
+2026-04-27T09:30:00.000Z INFO User loaded: 123
+```
+
+## Recommended namespaces
+
+Use structured logger names so `debug.enable()` filters are useful:
+
+- `api:*`
+- `worker:billing:*`
+- `http:request`

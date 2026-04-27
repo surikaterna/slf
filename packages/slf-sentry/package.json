@@ -13,7 +13,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/surikaterna/slf-sentry.git"
+    "url": "git+https://github.com/surikaterna/slf.git",
+    "directory": "packages/slf-sentry"
   },
   "keywords": [
     "slf",
@@ -24,9 +25,9 @@
   "author": "Surikaterna",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/surikaterna/slf-sentry/issues"
+    "url": "https://github.com/surikaterna/slf/issues"
   },
-  "homepage": "https://github.com/surikaterna/slf-sentry#readme",
+  "homepage": "https://github.com/surikaterna/slf#readme",
   "devDependencies": {
     "@types/node": "^18.7.15",
     "@repo/tsconfig": "1.0.0",

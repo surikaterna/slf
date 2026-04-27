@@ -17,7 +17,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/surikaterna/slf.git"
+    "url": "git+https://github.com/surikaterna/slf.git",
+    "directory": "packages/slf"
   },
   "keywords": [
     "log",

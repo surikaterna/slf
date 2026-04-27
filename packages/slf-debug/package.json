@@ -13,7 +13,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/surikaterna/slf-debug.git"
+    "url": "git+https://github.com/surikaterna/slf.git",
+    "directory": "packages/slf-debug"
   },
   "keywords": [
     "slf",
@@ -23,9 +24,9 @@
   "author": "Surikaterna",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/surikaterna/slf-debug/issues"
+    "url": "https://github.com/surikaterna/slf/issues"
   },
-  "homepage": "https://github.com/surikaterna/slf-debug#readme",
+  "homepage": "https://github.com/surikaterna/slf#readme",
   "dependencies": {
     "debug": "^4.3.4"
   },

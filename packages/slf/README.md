@@ -1,112 +1,110 @@
 # slf
 
-Surikat Log Facade
+Simple Logging Facade for Node.js applications.
 
 ## Install
 
 ```bash
-npm install --save slf
+npm install slf
 ```
 
-## API
+## Quick start
 
-Get a logger
+```ts
+import { ConsoleLogger, LoggerFactory } from 'slf';
 
-```javascript
+LoggerFactory.setFactory(ConsoleLogger);
+
+const log = LoggerFactory.getLogger('app:startup');
+
+log.info('Boot complete');
+log.warn('Configuration is missing optional key: %s', 'featureX');
+```
+
+## Log levels
+
+Available levels:
+
+- `debug`
+- `info`
+- `warn`
+- `error`
+- `critical`
+
+Set a minimum level when configuring the factory:
+
+```ts
+import { ConsoleLogger, Level, LoggerFactory } from 'slf';
+
+LoggerFactory.setFactory(ConsoleLogger, Level.Info);
+```
+
+Or set the level via environment variable:
+
+```bash
+SLF_LOG_LEVEL=debug
+```
+
+Supported values should be lower case: `debug`, `info`, `warn`, `error`, `critical`.
+
+## Logger API
+
+Create a logger:
+
+```ts
 import { LoggerFactory } from 'slf';
 
-const log = LoggerFactory.getLogger('name');
-
-const log = LoggerFactory.getLogger('name:subname:subsubname');
+const log = LoggerFactory.getLogger('service:payments');
 ```
 
-### Logging
+Write logs:
 
-```javascript
-log('Hello!'); // As level info
-log.log('info', 'Hello!'); // as level info
-log.log('Hello!'); // as level info (implicit)
-
-log.trace('My Trace');
-log.debug('My Debug');
-log.info('My Info');
-log.warn('My Warning');
-log.error('My Error');
-log.critical('My Critical Error');
+```ts
+log.debug('Debug message');
+log.info('Info message');
+log.warn('Warn message');
+log.error('Error message');
 ```
 
-### Formatting
+Generic method:
 
-Using util.format(...)
-
-- %s - String.
-- %d - Number (both integer and float).
-- %j - JSON. Replaced with the string '[Circular]' if the argument contains circular references.
-- %% - single percent sign ('%'). This does not consume an argument.
-
-```javascript
-log.info('My Formatted %s', 'Message')
->> 'My Formatted Message'
-log.info('My Formatted %d', 123)
->> 'My Formatted 123'
-log.info('My Formatted %d', 123)
->> 'My Formatted 123'
+```ts
+log.log('warn', 'Low disk space: %d%%', 9);
+log.log('This defaults to info');
 ```
 
-Json Formatting
+## Middleware
 
-```javascript
-log.info({ a: 'aloha' })
->> { a: 'aloha' }
-log.info('My Formatted %d', 123)
->> 'My Formatted 123'
-log.info('My Formatted %d', 123)
->> 'My Formatted 123'
+You can intercept and modify log events:
+
+```ts
+import { LoggerFactory } from 'slf';
+
+LoggerFactory.use((event, next) => {
+  event.params = ['[my-service]', ...event.params];
+  next(null, event);
+});
 ```
 
-## Configuring a Provider
+## Writing a custom driver
 
-```javascript
-LoggerFactory.setFactory(<factory-function>);
-LoggerFacotry.setFactory(ConsoleLogger);
-```
+A factory receives one or more events:
 
-### Log Levels
+```ts
+import { Event, LoggerFactory } from 'slf';
 
-When setting a factory provider, you can also set a level to ensure not to send logs if the level is too low.
-#### Set Level
-
-```javascript
-LoggerFacotry.setFactory(ConsoleLogger, Level.Info);
-```
-
-#### Hierarchy
-
-- Critical
-- Error
-- Warn
-- Info
-- Debug
-
-## Writing a Provider
-
-SLF is nothing without a backing logging implementation.
-The most tiny implementation of a console.log based implementation is shipped with SLF
-
-### API
-
-factory-function has the following signature:
-
-```javascript
-function(loggerName) {
-  return function(event) {
-    //do something with logEvent
+const customFactory = (...events: Event[]) => {
+  for (const event of events) {
+    // send event to your logging backend
   }
-}
-event = {
-  timeStamp: 123456767,
-  params: [],
-  name: 'logger:name'
-  level: 'error'
-}
+};
+
+LoggerFactory.setFactory(customFactory);
 ```
+
+Each event has:
+
+- `name`: logger name
+- `level`: lowercase log level string
+- `params`: original log arguments
+- `timeStamp`: epoch milliseconds
