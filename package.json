@@ -7,6 +7,9 @@
     "shared/*"
   ],
   "scripts": {
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
     "test": "turbo run test",
     "lint": "biome lint .",
     "format": "biome format --write .",
@@ -18,6 +21,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "latest",
+    "@changesets/cli": "^2.31.0",
     "turbo": "^2.9.6"
   }
 }
