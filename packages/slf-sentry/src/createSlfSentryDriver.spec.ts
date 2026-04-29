@@ -1,8 +1,6 @@
-import { captureException, captureMessage, setTag, withScope } from '@sentry/node';
 import { Event } from 'slf';
-import createSlfSentryDriver from './createSlfSentryDriver';
 
-vi.mock('@sentry/node', () => ({
+const sentryMocks = vi.hoisted(() => ({
   captureException: vi.fn(),
   captureMessage: vi.fn(),
   init: vi.fn(),
@@ -15,12 +13,28 @@ vi.mock('@sentry/node', () => ({
   })
 }));
 
+vi.mock('@sentry/node', () => ({
+  captureException: sentryMocks.captureException,
+  captureMessage: sentryMocks.captureMessage,
+  init: sentryMocks.init,
+  setTag: sentryMocks.setTag,
+  withScope: sentryMocks.withScope
+}));
+
+async function loadCreateSlfSentryDriver() {
+  const module = await import('./createSlfSentryDriver');
+
+  return module.default;
+}
+
 describe('#createSlfSentryDriver', () => {
-  afterEach(() => {
+  beforeEach(() => {
+    vi.resetModules();
     vi.clearAllMocks();
   });
 
-  it('should warn and send nothing if configured level is invalid', () => {
+  it('should warn and send nothing if configured level is invalid', async () => {
+    const createSlfSentryDriver = await loadCreateSlfSentryDriver();
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
 
     const driver = createSlfSentryDriver('https://sentry.example.com', {
@@ -35,13 +49,14 @@ describe('#createSlfSentryDriver', () => {
     } as Event);
 
     expect(warnSpy).toHaveBeenCalledWith('SLF: Invalid Sentry log level "%s". Allowed levels: %s. Sentry logging is disabled.', 'invalid-level', 'info, warn, error');
-    expect(captureException).not.toHaveBeenCalled();
-    expect(captureMessage).not.toHaveBeenCalled();
+    expect(sentryMocks.captureException).not.toHaveBeenCalled();
+    expect(sentryMocks.captureMessage).not.toHaveBeenCalled();
 
     warnSpy.mockRestore();
   });
 
-  it('should not send to Sentry if the event log level is not found in levels', () => {
+  it('should not send to Sentry if the event log level is not found in levels', async () => {
+    const createSlfSentryDriver = await loadCreateSlfSentryDriver();
     const driver = createSlfSentryDriver('https://sentry.example.com', {
       level: 'warn',
       levels: ['info', 'warn', 'error']
@@ -53,11 +68,12 @@ describe('#createSlfSentryDriver', () => {
       params: ['test message']
     } as Event);
 
-    expect(captureException).not.toHaveBeenCalled();
-    expect(captureMessage).not.toHaveBeenCalled();
+    expect(sentryMocks.captureException).not.toHaveBeenCalled();
+    expect(sentryMocks.captureMessage).not.toHaveBeenCalled();
   });
 
-  it('should send message when event level is same or above configured level', () => {
+  it('should send message when event level is same or above configured level', async () => {
+    const createSlfSentryDriver = await loadCreateSlfSentryDriver();
     const driver = createSlfSentryDriver('https://sentry.example.com', {
       level: 'warn',
       levels: ['info', 'warn', 'error']
@@ -69,13 +85,14 @@ describe('#createSlfSentryDriver', () => {
       params: ['test message']
     } as Event);
 
-    expect(setTag).not.toHaveBeenCalled();
-    expect(withScope).toHaveBeenCalled();
-    expect(captureMessage).toHaveBeenCalledWith('test message');
-    expect(captureException).not.toHaveBeenCalled();
+    expect(sentryMocks.setTag).not.toHaveBeenCalled();
+    expect(sentryMocks.withScope).toHaveBeenCalled();
+    expect(sentryMocks.captureMessage).toHaveBeenCalledWith('test message');
+    expect(sentryMocks.captureException).not.toHaveBeenCalled();
   });
 
-  it('should send when event level is above configured level', () => {
+  it('should send when event level is above configured level', async () => {
+    const createSlfSentryDriver = await loadCreateSlfSentryDriver();
     const driver = createSlfSentryDriver('https://sentry.example.com', {
       level: 'warn',
       levels: ['info', 'warn', 'error']
@@ -87,12 +104,13 @@ describe('#createSlfSentryDriver', () => {
       params: ['test message']
     } as Event);
 
-    expect(withScope).toHaveBeenCalled();
-    expect(captureMessage).toHaveBeenCalledWith('test message');
-    expect(captureException).not.toHaveBeenCalled();
+    expect(sentryMocks.withScope).toHaveBeenCalled();
+    expect(sentryMocks.captureMessage).toHaveBeenCalledWith('test message');
+    expect(sentryMocks.captureException).not.toHaveBeenCalled();
   });
 
-  it('should not send when event level is below configured level', () => {
+  it('should not send when event level is below configured level', async () => {
+    const createSlfSentryDriver = await loadCreateSlfSentryDriver();
     const driver = createSlfSentryDriver('https://sentry.example.com', {
       level: 'warn',
       levels: ['info', 'warn', 'error']
@@ -104,8 +122,8 @@ describe('#createSlfSentryDriver', () => {
       params: ['test message']
     } as Event);
 
-    expect(withScope).not.toHaveBeenCalled();
-    expect(captureMessage).not.toHaveBeenCalled();
-    expect(captureException).not.toHaveBeenCalled();
+    expect(sentryMocks.withScope).not.toHaveBeenCalled();
+    expect(sentryMocks.captureMessage).not.toHaveBeenCalled();
+    expect(sentryMocks.captureException).not.toHaveBeenCalled();
   });
 });
