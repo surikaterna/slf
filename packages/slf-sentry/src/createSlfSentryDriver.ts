@@ -2,22 +2,52 @@ import { captureException, captureMessage, init, setTag, SeverityLevel, withScop
 import { Event } from 'slf';
 
 export interface CreateSlfSentryLoggerOptions {
+  /**
+   * Enables Sentry SDK debug mode.
+   * By default, debug mode is enabled in `fat` and `dev` environments.
+   */
   debug?: boolean;
+  /**
+   * Minimum log level that will be sent to Sentry. The value must exist in `levels`.
+   * Defaults to `error`.
+   */
   level?: string;
+  /**
+   * Sentry environment name.
+   * Defaults to the `SENTRY_ENV` environment variable, or `dev` if it is not set.
+   */
   environment?: string;
+  /**
+   * Ordered log levels from lowest to highest priority. Used to compare event levels against `level`.
+   * Defaults to only `error`.
+   */
   levels?: Array<string>;
+  /** Release identifier attached to reported Sentry events. */
   release?: string;
+  /** Optional predicate to skip sending matching events. */
   shouldIgnore?: (event: Event) => boolean;
+  /** Tags added to Sentry events for filtering and grouping. */
   tags?: Record<string, string | number | boolean>;
 }
 
 let isInitialized = false;
 
+/**
+ * Creates an SLF driver that forwards matching events to Sentry.
+ *
+ * If `level` is not included in `levels`, the driver logs a warning and
+ * drops all events instead of sending anything to Sentry.
+ */
 export default function createSlfSentryDriver(
   sentryUrl: string,
   { debug, environment = process.env.SENTRY_ENV ?? 'dev', level = 'error', levels = ['error'], release, shouldIgnore, tags }: CreateSlfSentryLoggerOptions = {}
 ) {
   const levelIndex = levels.indexOf(level);
+  const isInvalidLevel = levelIndex === -1;
+
+  if (isInvalidLevel) {
+    console.warn('SLF: Invalid Sentry log level "%s". Allowed levels: %s. Sentry logging is disabled.', level, levels.join(', '));
+  }
 
   if (!isInitialized) {
     try {
@@ -45,7 +75,16 @@ export default function createSlfSentryDriver(
   }
 
   function checkIsEventLevelSameOrAbove(eventLogLevel: string): boolean {
+    if (isInvalidLevel) {
+      return false;
+    }
+
     const eventLevelIndex = levels.indexOf(eventLogLevel);
+
+    if (eventLevelIndex === -1) {
+      return false;
+    }
+
     return levelIndex <= eventLevelIndex;
   }
 
