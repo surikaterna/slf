@@ -18,6 +18,11 @@ export default function createSlfSentryDriver(
   { debug, environment = process.env.SENTRY_ENV ?? 'dev', level = 'error', levels = ['error'], release, shouldIgnore, tags }: CreateSlfSentryLoggerOptions = {}
 ) {
   const levelIndex = levels.indexOf(level);
+  const isInvalidLevel = levelIndex === -1;
+
+  if (isInvalidLevel) {
+    console.warn('SLF: Invalid Sentry log level "%s". Allowed levels: %s. Sentry logging is disabled.', level, levels.join(', '));
+  }
 
   if (!isInitialized) {
     try {
@@ -45,7 +50,16 @@ export default function createSlfSentryDriver(
   }
 
   function checkIsEventLevelSameOrAbove(eventLogLevel: string): boolean {
+    if (isInvalidLevel) {
+      return false;
+    }
+
     const eventLevelIndex = levels.indexOf(eventLogLevel);
+
+    if (eventLevelIndex === -1) {
+      return false;
+    }
+
     return levelIndex <= eventLevelIndex;
   }
 
