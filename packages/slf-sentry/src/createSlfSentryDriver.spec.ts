@@ -25,7 +25,7 @@ describe('#createSlfSentryDriver', () => {
 
     const driver = createSlfSentryDriver('https://sentry.example.com', {
       level: 'invalid-level',
-      levels: ['error', 'warn']
+      levels: ['info', 'warn', 'error']
     });
 
     driver({
@@ -34,7 +34,7 @@ describe('#createSlfSentryDriver', () => {
       params: ['test message']
     } as Event);
 
-    expect(warnSpy).toHaveBeenCalledWith('SLF: Invalid Sentry log level "%s". Allowed levels: %s. Sentry logging is disabled.', 'invalid-level', 'error, warn');
+    expect(warnSpy).toHaveBeenCalledWith('SLF: Invalid Sentry log level "%s". Allowed levels: %s. Sentry logging is disabled.', 'invalid-level', 'info, warn, error');
     expect(captureException).not.toHaveBeenCalled();
     expect(captureMessage).not.toHaveBeenCalled();
 
@@ -44,11 +44,11 @@ describe('#createSlfSentryDriver', () => {
   it('should not send to Sentry if the event log level is not found in levels', () => {
     const driver = createSlfSentryDriver('https://sentry.example.com', {
       level: 'warn',
-      levels: ['error', 'warn']
+      levels: ['info', 'warn', 'error']
     });
 
     driver({
-      level: 'info',
+      level: 'debug',
       name: 'test-event',
       params: ['test message']
     } as Event);
@@ -60,7 +60,7 @@ describe('#createSlfSentryDriver', () => {
   it('should send message when event level is same or above configured level', () => {
     const driver = createSlfSentryDriver('https://sentry.example.com', {
       level: 'warn',
-      levels: ['error', 'warn', 'info']
+      levels: ['info', 'warn', 'error']
     });
 
     driver({

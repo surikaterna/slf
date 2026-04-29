@@ -18,7 +18,7 @@ export interface CreateSlfSentryLoggerOptions {
    */
   environment?: string;
   /**
-   * Ordered log levels from highest to lowest priority. Used to compare event levels against `level`.
+   * Ordered log levels from lowest to highest priority. Used to compare event levels against `level`.
    * Defaults to only `error`.
    */
   levels?: Array<string>;
