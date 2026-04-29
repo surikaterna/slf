@@ -74,4 +74,38 @@ describe('#createSlfSentryDriver', () => {
     expect(captureMessage).toHaveBeenCalledWith('test message');
     expect(captureException).not.toHaveBeenCalled();
   });
+
+  it('should send when event level is above configured level', () => {
+    const driver = createSlfSentryDriver('https://sentry.example.com', {
+      level: 'warn',
+      levels: ['info', 'warn', 'error']
+    });
+
+    driver({
+      level: 'error',
+      name: 'test-event',
+      params: ['test message']
+    } as Event);
+
+    expect(withScope).toHaveBeenCalled();
+    expect(captureMessage).toHaveBeenCalledWith('test message');
+    expect(captureException).not.toHaveBeenCalled();
+  });
+
+  it('should not send when event level is below configured level', () => {
+    const driver = createSlfSentryDriver('https://sentry.example.com', {
+      level: 'warn',
+      levels: ['info', 'warn', 'error']
+    });
+
+    driver({
+      level: 'info',
+      name: 'test-event',
+      params: ['test message']
+    } as Event);
+
+    expect(withScope).not.toHaveBeenCalled();
+    expect(captureMessage).not.toHaveBeenCalled();
+    expect(captureException).not.toHaveBeenCalled();
+  });
 });
