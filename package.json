@@ -10,6 +10,8 @@
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
+    "clean": "rm -rf .turbo packages/*/lib packages/*/tsconfig.tsbuildinfo",
+    "clean:full": "npm run clean && rm -rf node_modules packages/*/node_modules shared/*/node_modules",
     "test": "turbo run test",
     "lint": "biome lint .",
     "format": "biome format --write .",

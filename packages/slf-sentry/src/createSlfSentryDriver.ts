@@ -35,7 +35,7 @@ export default function createSlfSentryDriver(
       });
       isInitialized = true;
     } catch (err) {
-      console.log('Failed to initialize logging to Sentry with the given url: %s', sentryUrl);
+      console.warn('Failed to initialize logging to Sentry with the given url: %s', sentryUrl);
       console.error(err);
     }
   }
