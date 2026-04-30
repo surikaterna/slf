@@ -1,112 +1,61 @@
-# slf
+# SLF Monorepo
 
-Surikat Log Facade
+Simple Logging Facade packages and drivers maintained in one repository.
 
-## Install
+## Packages
+
+| Package                                         | Description                                                                        |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [`slf`](./packages/slf/README.md)               | Core logging facade and logger factory used by all drivers.                        |
+| [`slf-debug`](./packages/slf-debug/README.md)   | Driver that forwards SLF events to [`debug`](https://www.npmjs.com/package/debug). |
+| [`slf-sentry`](./packages/slf-sentry/README.md) | Driver for sending SLF events to Sentry, with optional debug fan-out.              |
+
+## Requirements
+
+- Node.js 18+
+- npm 10+
+
+## Install dependencies
 
 ```bash
-npm install --save slf
+npm install
 ```
 
-## API
+## Workspace scripts
 
-Get a logger
-
-```javascript
-import { LoggerFactory } from 'slf';
-
-const log = LoggerFactory.getLogger('name');
-
-const log = LoggerFactory.getLogger('name:subname:subsubname');
+```bash
+npm run test
+npm run build
+npm run dev
+npm run lint
+npm run format
+npm run check-style
+npm run check-style:ci
 ```
 
-### Logging
+- `build`: Run package builds through Turbo (`turbo run build`)
+- `dev`: Run package watch builds through Turbo (`turbo run dev --parallel`)
 
-```javascript
-log('Hello!'); // As level info
-log.log('info', 'Hello!'); // as level info
-log.log('Hello!'); // as level info (implicit)
+## Changesets and versioning
 
-log.trace('My Trace');
-log.debug('My Debug');
-log.info('My Info');
-log.warn('My Warning');
-log.error('My Error');
-log.critical('My Critical Error');
+This repository uses `@changesets/cli`.
+
+Create a changeset:
+
+```bash
+npm run changeset
 ```
 
-### Formatting
+Apply version bumps and changelog updates:
 
-Using util.format(...)
-
-- %s - String.
-- %d - Number (both integer and float).
-- %j - JSON. Replaced with the string '[Circular]' if the argument contains circular references.
-- %% - single percent sign ('%'). This does not consume an argument.
-
-```javascript
-log.info('My Formatted %s', 'Message')
->> 'My Formatted Message'
-log.info('My Formatted %d', 123)
->> 'My Formatted 123'
-log.info('My Formatted %d', 123)
->> 'My Formatted 123'
+```bash
+npm run changeset:version
 ```
 
-Json Formatting
+Publish packages:
 
-```javascript
-log.info({ a: 'aloha' })
->> { a: 'aloha' }
-log.info('My Formatted %d', 123)
->> 'My Formatted 123'
-log.info('My Formatted %d', 123)
->> 'My Formatted 123'
+```bash
+npm run changeset:publish
 ```
 
-## Configuring a Provider
-
-```javascript
-LoggerFactory.setFactory(<factory-function>);
-LoggerFacotry.setFactory(ConsoleLogger);
-```
-
-### Log Levels
-
-When setting a factory provider, you can also set a level to ensure not to send logs if the level is too low.
-#### Set Level
-
-```javascript
-LoggerFacotry.setFactory(ConsoleLogger, Level.Info);
-```
-
-#### Hierarchy
-
-- Critical
-- Error
-- Warn
-- Info
-- Debug
-
-## Writing a Provider
-
-SLF is nothing without a backing logging implementation.
-The most tiny implementation of a console.log based implementation is shipped with SLF
-
-### API
-
-factory-function has the following signature:
-
-```javascript
-function(loggerName) {
-  return function(event) {
-    //do something with logEvent
-  }
-}
-event = {
-  timeStamp: 123456767,
-  params: [],
-  name: 'logger:name'
-  level: 'error'
-}
-```
+Changesets config lives in [`.changeset/config.json`](./.changeset/config.json).
