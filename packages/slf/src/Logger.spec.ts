@@ -2,10 +2,23 @@ import { Event, Level, Logger, LoggerFactory } from '.';
 
 describe('Logger', () => {
   let log: Logger;
+  const resetLoggerFactoryWarningState = () => {
+    const state = (LoggerFactory as any).state;
+    if (state.warningTimeout) {
+      clearTimeout(state.warningTimeout);
+      state.warningTimeout = null;
+    }
+    state.hasWarned = false;
+  };
+
   beforeAll(() => {
     log = Logger.getLogger(__filename);
   });
+
   afterEach(() => {
+    resetLoggerFactoryWarningState();
+    vi.useRealTimers();
+    vi.restoreAllMocks();
     LoggerFactory.setFactory(null);
   });
 
@@ -63,6 +76,71 @@ describe('Logger', () => {
       });
     });
   });
+
+  describe('LoggerFactory constructor defaults', () => {
+    it('should set default factory only when factory is not set', () => {
+      const firstEvents: Event[] = [];
+      const firstFactory = (...events: Event[]) => {
+        firstEvents.push(...events);
+      };
+
+      const secondEvents: Event[] = [];
+      const secondFactory = (...events: Event[]) => {
+        secondEvents.push(...events);
+      };
+
+      new LoggerFactory(firstFactory);
+      new LoggerFactory(secondFactory);
+
+      log.info('constructor-default');
+      expect(firstEvents.length).toBe(1);
+      expect(secondEvents.length).toBe(0);
+    });
+
+    it('should replace static factory via setFactory', () => {
+      const firstEvents: Event[] = [];
+      const firstFactory = (...events: Event[]) => {
+        firstEvents.push(...events);
+      };
+
+      const secondEvents: Event[] = [];
+      const secondFactory = (...events: Event[]) => {
+        secondEvents.push(...events);
+      };
+
+      new LoggerFactory(firstFactory);
+      LoggerFactory.setFactory(secondFactory);
+
+      log.info('set-factory-replace');
+      expect(firstEvents.length).toBe(0);
+      expect(secondEvents.length).toBe(1);
+    });
+  });
+
+  describe('LoggerFactory warning behavior', () => {
+    it('should schedule warning when no factory is installed', () => {
+      vi.useFakeTimers();
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+      Logger.getLogger('schedule-warning');
+
+      expect(consoleSpy).not.toHaveBeenCalled();
+      vi.runAllTimers();
+      expect(consoleSpy).toHaveBeenCalledWith('SLF: No LoggerFactory installed');
+    });
+
+    it('should cancel scheduled warning when factory is installed', () => {
+      vi.useFakeTimers();
+      const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+      Logger.getLogger('cancel-warning');
+      LoggerFactory.setFactory(() => undefined);
+
+      vi.runAllTimers();
+      expect(consoleSpy).not.toHaveBeenCalledWith('SLF: No LoggerFactory installed');
+    });
+  });
+
   describe('#debug', () => {
     it('should exist', () => {
       if (!('debug' in log)) {

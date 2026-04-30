@@ -15,14 +15,6 @@ const checkIfLevelBelow = (event: Event, level: Level = Level.Debug): boolean =>
   return level > Level[levelKey];
 }
 
-const provideToFactory = (events: Array<Event>, level: Level = Level.Debug) => {
-  const filteredEvents = events.filter((e) => !checkIfLevelBelow(e, level));
-  // events is empty if all are below set level
-  if (filteredEvents.length > 0) {
-    __slf._factory?.(...filteredEvents);
-  }
-}
-
 export interface Event {
   timeStamp: number;
   params: any[];
@@ -43,63 +35,99 @@ export interface Middleware {
 }
 
 interface Slf {
-  _chain: Middleware[];
-  _queued: Event[][];
-  _factory: Factory | null;
-  _logLevel: Level | null;
+  chain: Middleware[];
+  queued: Event[][];
+  factory: Factory | null;
+  logLevel: Level | null;
   hasWarned: boolean;
+  warningTimeout: ReturnType<typeof setTimeout> | null;
 }
-
-declare global {
-  var __slf: Slf;
-}
-
-const __slf = global.__slf
-  ? global.__slf
-  : (global.__slf = {
-    _chain: [],
-    _queued: [],
-    _factory: null,
-    _logLevel: null,
-    hasWarned: false
-  });
 
 export class LoggerFactory {
+  private static state: Slf = {
+    chain: [],
+    queued: [],
+    factory: null,
+    logLevel: null,
+    hasWarned: false,
+    warningTimeout: null
+  };
+
+  private static scheduleNoFactoryWarning() {
+    if (LoggerFactory.state.hasWarned || LoggerFactory.state.warningTimeout) {
+      return;
+    }
+
+    LoggerFactory.state.warningTimeout = setTimeout(() => {
+      LoggerFactory.state.warningTimeout = null;
+      if (!LoggerFactory.state.factory && !LoggerFactory.state.hasWarned) {
+        LoggerFactory.state.hasWarned = true;
+        console.warn('SLF: No LoggerFactory installed');
+      }
+    }, 0);
+  }
+
+  private static cancelNoFactoryWarning() {
+    if (!LoggerFactory.state.warningTimeout) {
+      return;
+    }
+
+    clearTimeout(LoggerFactory.state.warningTimeout);
+    LoggerFactory.state.warningTimeout = null;
+  }
+
+  private static provideToFactory(events: Event[], level: Level = Level.Debug) {
+    const filteredEvents = events.filter((e) => !checkIfLevelBelow(e, level));
+    // events is empty if all are below set level
+    if (filteredEvents.length > 0) {
+      LoggerFactory.state.factory?.(...filteredEvents);
+    }
+  }
+
+  constructor(factory?: Factory | null, level?: Level) {
+    if (factory && !LoggerFactory.state.factory) {
+      LoggerFactory.setFactory(factory, level);
+    }
+  }
+
   static getLogger(name: string) {
     let sink;
-    if (__slf._factory) {
-      sink = __slf._factory;
-    } else if (!__slf.hasWarned) {
-      __slf.hasWarned = true;
-      console.log('Warning SLF: No LoggerFactory installed');
+    if (LoggerFactory.state.factory) {
+      sink = LoggerFactory.state.factory;
+    } else {
+      LoggerFactory.scheduleNoFactoryWarning();
     }
     if (!sink) {
       sink = (...args: Event[]) => {
-        if (__slf._factory) {
-          provideToFactory(args, LoggerFactory.getLogLevel());
+        if (LoggerFactory.state.factory) {
+          LoggerFactory.provideToFactory(args, LoggerFactory.getLogLevel());
         } else {
-          __slf._queued[__slf._queued.length % 100] = args;
+          LoggerFactory.state.queued[LoggerFactory.state.queued.length % 100] = args;
         }
       };
     }
-    return new Logger(name, sink, __slf._chain, LoggerFactory.getLogLevel());
+    return new Logger(name, sink, LoggerFactory.state.chain, LoggerFactory.getLogLevel());
   }
   static setFactory(factory: Factory | null, level?: Level) {
-    if (__slf._factory && factory) {
-      console.log('Warning SLF: Replacing installed LoggerFactory', __slf._factory, factory);
-    }
-    if (!factory) {
-      __slf._queued.length = 0;
-    }
-    __slf._factory = factory;
-    if (__slf._factory && __slf._queued.length > 0) {
-      console.log('***** dumping Q');
-      __slf._queued.forEach((evt) => provideToFactory(evt, level));
-      __slf._queued.length = 0;
+    if (factory) {
+      LoggerFactory.cancelNoFactoryWarning();
     }
 
-    if (!__slf._logLevel) {
-      __slf._logLevel = LoggerFactory.getLogLevel(level);
+    if (LoggerFactory.state.factory && factory) {
+      console.warn('SLF: Replacing installed LoggerFactory', LoggerFactory.state.factory, factory);
+    }
+    if (!factory) {
+      LoggerFactory.state.queued.length = 0;
+    }
+    LoggerFactory.state.factory = factory;
+    if (LoggerFactory.state.factory && LoggerFactory.state.queued.length > 0) {
+      console.log('SLF: Sinking queue to factory');
+      LoggerFactory.state.queued.forEach((evt) => LoggerFactory.provideToFactory(evt, level));
+      LoggerFactory.state.queued.length = 0;
+    }
+
+    if (!LoggerFactory.state.logLevel) {
+      LoggerFactory.state.logLevel = LoggerFactory.getLogLevel(level);
     }
   }
   /**
@@ -107,7 +135,7 @@ export class LoggerFactory {
    * next should be called next(err, event);
    */
   static use(middleware: Middleware) {
-    __slf._chain.push(middleware);
+    LoggerFactory.state.chain.push(middleware);
   }
 
   private static getLogLevel(level?: Level | undefined): Level {
@@ -120,6 +148,6 @@ export class LoggerFactory {
         envLevel = capitalized;
       }
     }
-    return __slf._logLevel || level || (envLevel && Level[envLevel]) || Level.Debug;
+    return LoggerFactory.state.logLevel || level || (envLevel && Level[envLevel]) || Level.Debug;
   }
 }
