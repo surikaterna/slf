@@ -12,6 +12,11 @@
     "changeset:publish": "changeset publish",
     "test": "turbo run test",
     "lint": "biome lint .",
+    "overrides": {
+      "vitest": {
+        "std-env": "3.10.0"
+      }
+    },
     "format": "biome format --write .",
     "check-style": "biome check --write .",
     "check-style:ci": "biome check .",
