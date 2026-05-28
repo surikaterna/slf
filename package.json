@@ -21,6 +21,6 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.13",
     "@changesets/cli": "^2.31.0",
-    "turbo": "^2.9.6"
+    "turbo": "^2.9.14"
   }
 }
