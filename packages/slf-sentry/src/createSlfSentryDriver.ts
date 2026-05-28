@@ -26,6 +26,10 @@ export default function createSlfSentryDriver(
           setTag(key, value);
         });
       }
+
+      if (!tags?.cluster && process.env.SENTRY_CLUSTER) {
+        setTag('cluster', process.env.SENTRY_CLUSTER);
+      }
       init({
         dsn: sentryUrl,
         tracesSampleRate: 1.0,
