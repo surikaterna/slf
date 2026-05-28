@@ -27,9 +27,13 @@ export default function createSlfSentryDriver(
         });
       }
 
-      if (!tags?.cluster && process.env.SENTRY_CLUSTER) {
-        setTag('cluster', process.env.SENTRY_CLUSTER);
-      }
+      Object.entries(process.env).forEach(([envKey, envValue]) => {
+        const tagPrefix = 'SENTRY_TAG_';
+        if (envKey.startsWith(tagPrefix) && envValue != null) {
+          const tagName = envKey.slice(tagPrefix.length).toLowerCase();
+          setTag(tagName, envValue);
+        }
+      });
       init({
         dsn: sentryUrl,
         tracesSampleRate: 1.0,
