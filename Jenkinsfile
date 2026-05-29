@@ -2,7 +2,7 @@ pipeline {
     agent none
     options { skipDefaultCheckout() }
     environment {
-        NPM_TOKEN = credentials('80057302-eb65-11e9-aebf-dc7196dad022')
+        NPM_TOKEN = credentials('npm-token')
     }
 
     stages {
@@ -56,6 +56,40 @@ pipeline {
             }
         }
 
+        stage('Check style') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    label 'lynx'
+                }
+            }
+
+            environment {
+                HOME = "${env.WORKSPACE}"
+            }
+
+            steps {
+                sh 'npm run check-style:ci'
+            }
+        }
+
+        stage('Audit') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    label 'lynx'
+                }
+            }
+
+            environment {
+                HOME = "${env.WORKSPACE}"
+            }
+
+            steps {
+                sh 'npm audit ci'
+            }
+        }
+
         stage('Publish to npm') {
             agent {
                 docker {
@@ -72,7 +106,7 @@ pipeline {
 
             environment {
                 HOME = "${env.WORKSPACE}"
-                NPM_TOKEN = credentials('80057302-eb65-11e9-aebf-dc7196dad022')
+                NPM_TOKEN = credentials('npm-token')
             }
 
             steps {
