@@ -1,0 +1,119 @@
+pipeline {
+    agent none
+    options { skipDefaultCheckout() }
+    environment {
+        NPM_TOKEN = credentials('npm-token')
+    }
+
+    stages {
+        stage('Checkout SCM') {
+            agent {
+                label 'lynx'
+            }
+
+            environment {
+                HOME = "${env.WORKSPACE}"
+            }
+
+            steps {
+                sh 'rm -Rf .git'
+                checkout scm
+            }
+        }
+
+        stage('Install dependencies') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    label 'lynx'
+                }
+            }
+
+            environment {
+                HOME = "${env.WORKSPACE}"
+            }
+
+            steps {
+                echo "installing dependencies for build ${env.BRANCH_NAME}-${env.BUILD_ID}"
+                sh 'npm ci --legacy-peer-deps'
+            }
+        }
+
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    label 'lynx'
+                }
+            }
+
+            environment {
+                HOME = "${env.WORKSPACE}"
+            }
+
+            steps {
+                sh 'npm run build'
+            }
+        }
+
+        stage('Check style') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    label 'lynx'
+                }
+            }
+
+            environment {
+                HOME = "${env.WORKSPACE}"
+            }
+
+            steps {
+                sh 'npm run check-style:ci'
+            }
+        }
+
+        stage('Audit') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    label 'lynx'
+                }
+            }
+
+            environment {
+                HOME = "${env.WORKSPACE}"
+            }
+
+            steps {
+                sh 'npm audit ci'
+            }
+        }
+
+        stage('Publish to npm') {
+            agent {
+                docker {
+                    image 'node:22-alpine'
+                    label 'lynx'
+                }
+            }
+
+            when {
+                expression {
+                    BRANCH_NAME == 'develop' || BRANCH_NAME ==~ /release\/\d+\.\d+\.\d+/
+                }
+            }
+
+            environment {
+                HOME = "${env.WORKSPACE}"
+                NPM_TOKEN = credentials('npm-token')
+            }
+
+            steps {
+                echo "publishing npm packages for build ${env.BRANCH_NAME}-${env.BUILD_ID}"
+                sh "npm set //registry.npmjs.org/:_authToken=${env.NPM_TOKEN}"
+                sh 'npm run changeset:publish'
+            }
+        }
+    }
+}
