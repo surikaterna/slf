@@ -29,7 +29,7 @@ export default function createSlfSentryDriver(
 
       const tagPrefix = 'SENTRY_TAG_';
       Object.entries(process.env).forEach(([envKey, envValue]) => {
-        if (envKey.startsWith(tagPrefix) && envValue != null) {
+        if (envKey.startsWith(tagPrefix) && envValue) {
           const tagName = envKey.slice(tagPrefix.length).toLowerCase();
           setTag(tagName, envValue);
         }
