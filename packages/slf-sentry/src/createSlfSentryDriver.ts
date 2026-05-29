@@ -26,6 +26,14 @@ export default function createSlfSentryDriver(
           setTag(key, value);
         });
       }
+
+      const tagPrefix = 'SENTRY_TAG_';
+      Object.entries(process.env).forEach(([envKey, envValue]) => {
+        if (envKey.startsWith(tagPrefix) && envValue) {
+          const tagName = envKey.slice(tagPrefix.length).toLowerCase();
+          setTag(tagName, envValue);
+        }
+      });
       init({
         dsn: sentryUrl,
         tracesSampleRate: 1.0,
