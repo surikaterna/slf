@@ -1,6 +1,6 @@
 {
   "name": "slf-debug",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Surikat Log Facade, debug-js/debug driver",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -48,12 +48,12 @@
     "@types/debug": "^4.1.7",
     "@types/node": "^18.7.15",
     "rimraf": "^6.1.3",
-    "slf": "^2.0.3",
+    "slf": "^2.1.0",
     "tsdown": "^0.22.13",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"
   },
   "peerDependencies": {
-    "slf": "^2.0.0"
+    "slf": "^2.1.0"
   }
 }
