@@ -1,5 +1,5 @@
 import { LoggerFactory } from 'slf';
-import slfDebugDriver from './slfDebugDriver';
+import slfDebugDriver from './slfDebugDriver.js';
 
 describe('AA', () => {
   it('a', () => {

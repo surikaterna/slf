@@ -4,7 +4,7 @@
   "exclude": ["node_modules"],
   "compilerOptions": {
     "rootDir": "./src",
-    "outDir": "./lib",
+    "outDir": "./dist",
     "types": ["vitest/globals", "node"]
   }
 }

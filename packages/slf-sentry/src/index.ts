@@ -1,6 +1,6 @@
-import createSlfDriver from './createSlfDriver';
+import createSlfDriver from './createSlfDriver.js';
 
-export { default as createSlfSentryDebugDriver } from './createSlfSentryDebugDriver';
-export * from './createSlfSentryDriver';
+export { default as createSlfSentryDebugDriver } from './createSlfSentryDebugDriver.js';
+export * from './createSlfSentryDriver.js';
 
 export default createSlfDriver;

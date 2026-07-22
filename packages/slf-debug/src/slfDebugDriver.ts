@@ -13,7 +13,7 @@ function formatEventParams(event: Event): [string, ...Array<unknown>] {
   const level = event.level.toUpperCase();
   const date = new Date(event.timeStamp).toISOString();
 
-  event.params.forEach((param) => params.push(paramFormatter(param)));
+  event.params.forEach((param: unknown) => params.push(paramFormatter(param)));
 
   const firstParam = params[0];
   return typeof firstParam === 'string' ? [`${date} ${level} ${firstParam}`, ...params.slice(1)] : [`${date} ${level}`, ...params];

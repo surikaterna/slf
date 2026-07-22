@@ -1,3 +1,4 @@
-export { Logger } from './Logger';
-export { LoggerFactory, Level, Event, NextFunc, Middleware } from './LoggerFactory';
-export { ConsoleLogger } from './ConsoleLogger';
+export { Logger } from './Logger.js';
+export { LoggerFactory, Level } from './LoggerFactory.js';
+export type { Event, NextFunc, Middleware } from './LoggerFactory.js';
+export { ConsoleLogger } from './ConsoleLogger.js';

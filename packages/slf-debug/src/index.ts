@@ -1,3 +1,3 @@
-import slfDebugDriver from './slfDebugDriver';
+import slfDebugDriver from './slfDebugDriver.js';
 
 export default slfDebugDriver;

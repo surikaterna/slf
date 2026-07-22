@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.13/schema.json",
   "files": {
-    "includes": ["**", "!**/lib", "!**/.turbo", "!**/.config"]
+    "includes": ["**", "!**/dist", "!**/lib", "!**/.turbo", "!**/.config"]
   },
   "linter": {
     "enabled": true,

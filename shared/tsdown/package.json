@@ -1,0 +1,12 @@
+{
+  "name": "@repo/tsdown",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "peerDependencies": {
+    "tsdown": "^0.22.13",
+    "typescript": "^7.0.2"
+  }
+}
