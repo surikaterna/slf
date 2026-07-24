@@ -1,5 +1,5 @@
-import { Logger } from './Logger.js';
-import { capitalize } from './utils.js';
+import { Logger } from './Logger';
+import { capitalize } from './utils';
 
 export enum Level {
   Debug = 1,

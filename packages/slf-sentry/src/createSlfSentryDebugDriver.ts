@@ -1,6 +1,6 @@
 import { Event } from 'slf';
 import slfDebug from 'slf-debug';
-import createSlfSentryDriver, { CreateSlfSentryLoggerOptions } from './createSlfSentryDriver.js';
+import createSlfSentryDriver, { CreateSlfSentryLoggerOptions } from './createSlfSentryDriver';
 
 const createSlfSentryDebugDriver = (sentryUrl: string, options?: CreateSlfSentryLoggerOptions) => (event: Event) => {
   slfDebug(event);

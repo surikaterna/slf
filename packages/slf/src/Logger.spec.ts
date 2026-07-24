@@ -1,4 +1,4 @@
-import { Event, Level, Logger, LoggerFactory } from './index.js';
+import { Event, Level, Logger, LoggerFactory } from '.';
 
 describe('Logger', () => {
   let log: Logger;

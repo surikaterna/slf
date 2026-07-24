@@ -1,5 +1,5 @@
-import { Event, Factory, Level, LoggerFactory, Middleware, NextFunc } from './LoggerFactory.js';
-import { capitalize } from './utils.js';
+import { Event, Factory, Level, LoggerFactory, Middleware, NextFunc } from './LoggerFactory';
+import { capitalize } from './utils';
 
 interface LogFunc {
   (...value: any[]): void;

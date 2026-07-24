@@ -1,4 +1,4 @@
-import { Event } from './LoggerFactory.js';
+import { Event } from './LoggerFactory';
 
 /**
  * Implementation of a tiny logging provider using the console.log

@@ -1,5 +1,5 @@
-import { Logger, ConsoleLogger, LoggerFactory } from './index.js';
-import { Event } from './LoggerFactory.js';
+import { Logger, ConsoleLogger, LoggerFactory } from '.';
+import { Event } from './LoggerFactory';
 
 let clog = console.log;
 
