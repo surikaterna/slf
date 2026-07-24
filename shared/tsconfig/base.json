@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "ES2022",
+    "module": "ESNext",
     "lib": ["esnext"],
-    "moduleResolution": "node",
-    "ignoreDeprecations": "5.0",
+    "moduleResolution": "Bundler",
     "esModuleInterop": true,
     "strict": true,
     "composite": true,

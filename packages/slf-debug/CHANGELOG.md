@@ -1,6 +1,6 @@
-# slf-sentry
+# slf-debug
 
-## 2.6.0
+## 0.4.0
 
 ### Minor Changes
 
@@ -9,11 +9,4 @@
 ### Patch Changes
 
 - Updated dependencies
-  - slf-debug@0.4.0
   - slf@2.1.0
-
-## 2.5.0
-
-### Minor Changes
-
-- Tags from envs

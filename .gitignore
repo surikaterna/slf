@@ -39,6 +39,7 @@ app/bundle.js
 app/.bundle.js
 
 lib
+dist
 
 # TypeScript incremental build artifacts
 *.tsbuildinfo
