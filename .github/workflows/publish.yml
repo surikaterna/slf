@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: publish-develop
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
