@@ -41,7 +41,7 @@
     "@sentry/node": "^7.120.3"
   },
   "peerDependencies": {
-    "slf": "^2.0.4",
-    "slf-debug": "^0.3.2"
+    "slf": "^2.0.3",
+    "slf-debug": "^0.3.1"
   }
 }

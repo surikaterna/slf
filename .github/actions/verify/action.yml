@@ -24,4 +24,4 @@ runs:
 
     - name: Audit dependencies
       shell: bash
-      run: npm audit ci
+      run: npm audit

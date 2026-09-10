@@ -40,6 +40,6 @@
     "vitest": "^5.0.0"
   },
   "peerDependencies": {
-    "slf": "^2.0.4"
+    "slf": "^2.0.0"
   }
 }
