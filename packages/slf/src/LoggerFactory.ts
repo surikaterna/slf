@@ -107,7 +107,19 @@ export class LoggerFactory {
    * next should be called next(err, event);
    */
   static use(middleware: Middleware) {
-    __slf._chain.push(middleware);
+    if (!__slf._chain.includes(middleware)) {
+      __slf._chain.push(middleware);
+    }
+  }
+
+  /** Remove a previously registered middleware by function reference. */
+  static remove(middleware: Middleware): boolean {
+    const index = __slf._chain.indexOf(middleware);
+    if (index === -1) {
+      return false;
+    }
+    __slf._chain.splice(index, 1);
+    return true;
   }
 
   private static getLogLevel(level?: Level | undefined): Level {

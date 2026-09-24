@@ -80,10 +80,15 @@ You can intercept and modify log events:
 ```ts
 import { LoggerFactory } from 'slf';
 
-LoggerFactory.use((event, next) => {
+const prefix = (event, next) => {
   event.params = ['[my-service]', ...event.params];
   next(null, event);
-});
+};
+
+LoggerFactory.use(prefix);
+LoggerFactory.use(prefix); // The same function is registered only once.
+
+LoggerFactory.remove(prefix); // Returns true when removed, false if not registered.
 ```
 
 ## Writing a custom driver
