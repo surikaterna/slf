@@ -40,22 +40,12 @@ npm run check-style:ci
 
 This repository uses `@changesets/cli`.
 
-Create a changeset:
+For changes that need a release, create a changeset and commit it with your changes:
 
 ```bash
 npm run changeset
 ```
 
-Apply version bumps and changelog updates:
-
-```bash
-npm run changeset:version
-```
-
-Publish packages:
-
-```bash
-npm run changeset:publish
-```
+After the PR is merged into `develop`, the [Changesets workflow](./.github/workflows/changesets.yml) creates or updates a version PR. Merging that PR publishes the new versions to npm and creates package tags and releases on GitHub. Do not run the version or publish scripts as part of your PR.
 
 Changesets config lives in [`.changeset/config.json`](./.changeset/config.json).
