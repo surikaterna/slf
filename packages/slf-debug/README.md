@@ -22,6 +22,18 @@ const log = LoggerFactory.getLogger('api:users');
 log.info('User loaded: %s', '123');
 ```
 
+## Enable logs with `DEBUG`
+
+The driver uses the SLF logger name as its `debug` namespace. Set `DEBUG` before starting your application to select which names produce output:
+
+```bash
+DEBUG=api:* npm start
+```
+
+This enables logs from `api:users` and other `api:*` loggers. Use `DEBUG=*` to enable all namespaces, or a comma-separated list such as `DEBUG=api:*,worker:billing:*` to enable several. Without a matching `DEBUG` namespace (or a call to `debug.enable()` as shown above), the debug driver produces no output.
+
+`DEBUG` controls which logger names are enabled; `SLF_LOG_LEVEL` independently sets the minimum log level (for example, `SLF_LOG_LEVEL=info DEBUG=api:* npm start`).
+
 ## Behavior
 
 - Reuses one `debug` logger per SLF logger name.
