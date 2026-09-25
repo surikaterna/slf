@@ -47,7 +47,6 @@ interface Slf {
   _queued: Event[][];
   _factory: Factory | null;
   _logLevel: Level | null;
-  hasWarned: boolean;
 }
 
 declare global {
@@ -60,8 +59,7 @@ const __slf = global.__slf
     _chain: [],
     _queued: [],
     _factory: null,
-    _logLevel: null,
-    hasWarned: false
+    _logLevel: null
   });
 
 export class LoggerFactory {
@@ -69,9 +67,6 @@ export class LoggerFactory {
     let sink;
     if (__slf._factory) {
       sink = __slf._factory;
-    } else if (!__slf.hasWarned) {
-      __slf.hasWarned = true;
-      console.log('Warning SLF: No LoggerFactory installed');
     }
     if (!sink) {
       sink = (...args: Event[]) => {
@@ -93,7 +88,6 @@ export class LoggerFactory {
     }
     __slf._factory = factory;
     if (__slf._factory && __slf._queued.length > 0) {
-      console.log('***** dumping Q');
       __slf._queued.forEach((evt) => provideToFactory(evt, level));
       __slf._queued.length = 0;
     }
