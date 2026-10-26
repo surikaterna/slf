@@ -16,6 +16,10 @@ concurrency:
 jobs:
   changesets:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -23,7 +27,7 @@ jobs:
       - name: Verify
         uses: ./.github/actions/verify
 
-      - name: Set up npm authentication
+      - name: Set up npm publishing
         uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
@@ -36,5 +40,3 @@ jobs:
           publish-script: npm run changeset:publish
           push-git-tags: true
           create-github-releases: true
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,7 +1,10 @@
 {
   "name": "slf-monorepo",
   "private": true,
-  "packageManager": "npm@10.9.3",
+  "packageManager": "npm@11.5.1",
+  "engines": {
+    "npm": ">=11.5.1"
+  },
   "workspaces": [
     "packages/*",
     "shared/*"
