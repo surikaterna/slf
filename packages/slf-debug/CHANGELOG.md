@@ -1,12 +1,9 @@
 # slf-debug
 
-## 0.4.0
-
-### Minor Changes
-
-- Provide both esm and cjs exports.
+## 0.3.2
 
 ### Patch Changes
 
+- Upgrade development dependencies to fix vulnerabilities.
 - Updated dependencies
-  - slf@2.1.0
+  - slf@2.0.4

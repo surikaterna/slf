@@ -1,16 +1,13 @@
 # slf-sentry
 
-## 2.6.0
-
-### Minor Changes
-
-- Provide both esm and cjs exports.
+## 2.5.1
 
 ### Patch Changes
 
+- Upgrade development dependencies to fix vulnerabilities.
 - Updated dependencies
-  - slf-debug@0.4.0
-  - slf@2.1.0
+  - slf@2.0.4
+  - slf-debug@0.3.2
 
 ## 2.5.0
 
