@@ -1,8 +1,8 @@
-import { defineConfig, type Options } from 'tsdown';
+import { defineConfig, type UserConfig } from 'tsdown';
 
-export function createTsdownConfig(overrideOptions: Options = {}) {
+export function createTsdownConfig(overrideOptions: UserConfig = {}) {
   return defineConfig(() => {
-    const defaultOptions: Options = {
+    const defaultOptions: UserConfig = {
       entry: ['src/index.ts'],
       outDir: 'dist',
       format: ['cjs', 'esm'],
@@ -10,7 +10,7 @@ export function createTsdownConfig(overrideOptions: Options = {}) {
       clean: true,
       sourcemap: true,
       minify: false,
-      splitting: false
+      unbundle: true
     };
 
     return {

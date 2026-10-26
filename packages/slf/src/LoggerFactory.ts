@@ -63,7 +63,7 @@ const __slf = global.__slf
   });
 
 export class LoggerFactory {
-  static getLogger(name: string) {
+  static getLogger(name: string): Logger {
     let sink;
     if (__slf._factory) {
       sink = __slf._factory;
@@ -79,7 +79,7 @@ export class LoggerFactory {
     }
     return new Logger(name, sink, __slf._chain, LoggerFactory.getLogLevel());
   }
-  static setFactory(factory: Factory | null, level?: Level) {
+  static setFactory(factory: Factory | null, level?: Level): void {
     if (__slf._factory && factory) {
       console.log('Warning SLF: Replacing installed LoggerFactory', __slf._factory, factory);
     }
@@ -100,7 +100,7 @@ export class LoggerFactory {
    * middleware has function(event, next)
    * next should be called next(err, event);
    */
-  static use(middleware: Middleware) {
+  static use(middleware: Middleware): void {
     if (!__slf._chain.includes(middleware)) {
       __slf._chain.push(middleware);
     }

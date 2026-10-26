@@ -33,7 +33,7 @@ const getLogger = (name: string): Debugger => {
   return newLogger;
 };
 
-const slfDebugDriver = (event: Event) => {
+const slfDebugDriver = (event: Event): void => {
   const log = getLogger(event.name);
   log(...formatEventParams(event));
 };

@@ -2,7 +2,7 @@ import slfDebug from 'slf-debug';
 import createSlfSentryDebugDriver from './createSlfSentryDebugDriver';
 import { CreateSlfSentryLoggerOptions } from './createSlfSentryDriver';
 
-const createSlfDriver = (sentryUrl?: string, options?: CreateSlfSentryLoggerOptions) => {
+const createSlfDriver = (sentryUrl?: string, options?: CreateSlfSentryLoggerOptions): ReturnType<typeof createSlfSentryDebugDriver> => {
   if (!sentryUrl) {
     return slfDebug;
   }
