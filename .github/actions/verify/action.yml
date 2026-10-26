@@ -18,6 +18,10 @@ runs:
       shell: bash
       run: npm run build
 
+    - name: Check package resolution
+      shell: bash
+      run: npm run test:resolution
+
     - name: Check style
       shell: bash
       run: npm run check-style:ci

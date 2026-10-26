@@ -12,8 +12,8 @@ Simple Logging Facade packages and drivers maintained in one repository.
 
 ## Requirements
 
-- Node.js 18+
-- npm 10+
+- Node.js 26+ (for repository development; see `.nvmrc`)
+- npm 11.5.1+
 
 ## Install dependencies
 
@@ -25,6 +25,7 @@ npm install
 
 ```bash
 npm run test
+npm run test:resolution
 npm run build
 npm run dev
 npm run lint
@@ -34,6 +35,7 @@ npm run check-style:ci
 ```
 
 - `build`: Run package builds through Turbo (`turbo run build`)
+- `test:resolution`: Check packed packages' ESM/CJS runtime exports and TypeScript declarations, including legacy CommonJS resolution with TypeScript 5.
 - `dev`: Run package watch builds through Turbo (`turbo run dev --parallel`)
 
 ## Changesets and versioning
