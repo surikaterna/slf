@@ -23,7 +23,7 @@ describe('Logger', () => {
         log.info('aloha');
         log.warn('aloha');
         const events: Array<Event> = [];
-        LoggerFactory.setFactory((event) => {
+        LoggerFactory.setFactory((event: Event) => {
           events.push(event);
           if (events.length === 3) {
             const [debug, info, warn] = events;
@@ -45,7 +45,7 @@ describe('Logger', () => {
         log.info('aloha');
         log.warn('aloha');
         const events: Array<Event> = [];
-        LoggerFactory.setFactory((event) => {
+        LoggerFactory.setFactory((event: Event) => {
           if (event.level === 'debug') {
             reject(new Error('debug event should not be queued'));
             return;

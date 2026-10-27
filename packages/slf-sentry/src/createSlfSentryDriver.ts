@@ -16,7 +16,7 @@ let isInitialized = false;
 export default function createSlfSentryDriver(
   sentryUrl: string,
   { debug, environment = process.env.SENTRY_ENV ?? 'dev', level = 'error', levels = ['error'], release, shouldIgnore, tags }: CreateSlfSentryLoggerOptions = {}
-) {
+): (event: Event) => void {
   const levelIndex = levels.indexOf(level);
 
   if (!isInitialized) {
